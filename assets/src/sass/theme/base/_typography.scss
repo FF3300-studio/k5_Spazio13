@@ -128,6 +128,10 @@
   border: 2px solid $color-black;
 }
 
+body{
+  @extend %medium;
+}
+
 * strong {
   font-variation-settings: "wght" $font-black;
 }
@@ -180,4 +184,10 @@ h5 {
 
 * p a {
   text-decoration: underline;
+}
+
+hr{
+  opacity: 1;
+  border: none;
+  border-top: 1px solid $color-theme;
 }

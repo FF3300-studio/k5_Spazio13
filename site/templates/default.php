@@ -20,6 +20,8 @@
     <?php endif; ?>
 <?php endif; ?>
 
+<?php snippet('newsletter'); ?>
+
 <?php snippet('check_banner',['posizione' => 'sotto',]); ?>
 
 <?php snippet('layouts', ['layout_content' => $site->footer(), 'class' => 'footer',]); ?>

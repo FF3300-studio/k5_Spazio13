@@ -81,9 +81,7 @@
 
 <?php if($item->dove()->isNotEmpty()): ?>
 <div class="location">
-    <?php foreach($item->dove()->toPages() as $luogo): ?>
-        📍 <?= $luogo->title() ?>
-    <?php endforeach; ?>
+    📍 <?= $item->dove() ?>
 </div>
 <?php endif; ?>
 

@@ -1,3 +1,4 @@
+<?php $parent = $item->parent() ?>
 <?php $deadline_exist = "off"; ?>
 <?php $deadline_toggle = "off"; ?>
 <?php $deadline = $item->deadline() OR NULL ?>
@@ -7,6 +8,7 @@
 <?php if($tag_toggle == true AND $item->child_category_selector()->isNotEmpty()): ?>
 <div class="cards-categories">
     <span class="tag parent"><?= $item->parent()->title() ?></span>
+
     <?php foreach($item->child_category_selector()->split() as $category): ?>
         <span class="tag"><?= $category ?></span>
         <?php if(strtolower($category) == "workshop"): ?>
@@ -16,76 +18,93 @@
 </div>
 <?php endif; ?>
 
-<div class="cards-title" style="margin:0!important;">
-    <h2><?= $item->title() ?></h2>
+<div>
+    <div class="cards-dates" style="display: flex; width: 100%; flex-direction: row; justify-content: space-between; flex-wrap:nowrap;">
+        <?php if($item->appuntamenti()->isNotEmpty()): ?>
+            <?php $appuntamenti = $item->appuntamenti()->toStructure() ?>
+            <?php foreach($appuntamenti as $appuntamento): ?>
+            <?php 
+            $formatter = new IntlDateFormatter('it_IT', IntlDateFormatter::NONE, IntlDateFormatter::NONE);
+            $formatter->setPattern('d MMMM Y'); // Modello simile a %d – %b – %Y;
+            ?>
+            <span style="width: fit-content; min-width: fit-content;" class="">
+                <strong><?= $formatter->format($appuntamento->giorno()->toDate()) ?></strong>
+            </span>  
+            <span style="width: fit-content; min-width: fit-content;" class="">
+                <?= $appuntamento->orario_inizio()->toDate('H:i') ?><?php if($appuntamento->orario_fine()->isNotEmpty()): ?> → <?= $appuntamento->orario_fine()->toDate('H:i') ?><?php endif; ?>
+            </span>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        <?php if($item->dove()->isNotEmpty()): ?>
+            <span style="width: fit-content; min-width: fit-content;" class="">
+                ⏷ <?= $item->dove() ?>
+            </span>
+        <?php endif; ?>
+    </div>
 </div>
 
-<?php if ($item->deadline()->isNotEmpty()): ?>
-    <?php $deadline_exist = "on" ?>
-<?php endif; ?>
-<?php if ($item->deadline()->isNotEmpty() && strtotime($item->deadline()) >= strtotime('today')): ?>
-    <?php $deadline_toggle = "on" ?>
-    <hr style="margin: 0; margin-top: 30px; border: none; border-bottom: 1px solid; opacity: 1;">
-    <?php $deadline = $item->deadline() ?>
-    <div class="cards-dates" style="display: flex; width: 100%; justify-content: center; flex-wrap:wrap; text-align: center;">
-        <?php 
-        $formatter = new IntlDateFormatter('it_IT', IntlDateFormatter::NONE, IntlDateFormatter::NONE);
-        $formatter->setPattern('d MMM Y'); // Modello simile a %d – %b – %Y;
-        ?>
-        <span id="deadline" class="center" style="min-width: fit-content; max-width: 100%; text-transform: uppercase; text-align: center; padding-top: 15px; padding-bottom: 15px;" class="time"><strong>ISCRIVITI ENTRO</strong> → <strong><?= $formatter->format($deadline->toDate()) ?></strong></span>
-    </div>
-    <hr style="margin: 0; margin-bottom: 15px; border: none; border-top: 1px solid; opacity: 1;">
-<?php else: ?>
-    <hr style="margin: 0; border: none;">
+<?php if($item->appuntamenti()->isNotEmpty() OR $item->dove()->isNotEmpty()): ?>
+<hr style="border: none; border-top: 1px solid; opacity: 1;">
 <?php endif; ?>
 
+<div class="cards-title" style="margin:0!important;">
+<?php if($parent == "attivita"): ?>
+    <h2 style="margin-bottom: 0;"><?= $item->title() ?></h2>
+<?php else: ?>
+    <h2><?= $item->title() ?></h2>
+<?php endif; ?>
+</div>
+
+<?php if($parent == "attivita"): ?>
+<?php else: ?>
 <div class="cards-text">
     <?php echo $item->descrizione()->kirbytext(); ?>
 </div>
+<?php endif; ?>
 
 <?php if ($item->team()->isNotEmpty()): ?>
-    <hr style="margin: 0; margin-top: 15px; border: none; border-bottom: 1px solid; opacity: 1;">
     <?php if($facilitato == false): ?>
-        <div class="team-label"><p style="margin: 0; margin-top: 15px; margin-bottom: 15px;">Con la partecipazione di:</p></div>
+    <div class="team-label"><p style="margin: 0; margin-top: 15px; margin-bottom: 0;">Con la partecipazione di:
     <?php else: ?>
-        <div class="team-label"><p style="margin: 0; margin-top: 15px; margin-bottom: 7.5px;">Attività facilitata da:</p></div>
+    <div class="team-label"><p style="margin: 0; margin-top: 15px; margin-bottom:0;">Attività facilitata da:
     <?php endif; ?>
-    
-    <?php foreach($item->team()->toStructure() as $team_member): ?>
-        <p class="team" style="margin-top:0; margin-bottom: 5px;">→ <strong><?= $team_member->persona() ?></strong> / <?= $team_member->ruolo() ?></p>
-    <?php endforeach; ?>
-
+        <?php $members = 0 ?>
+        <?php foreach($item->team()->toStructure() as $team_member): ?>
+            <?php $members++; ?>
+        <?php endforeach; ?>
+        <?php $printed_members = 0 ?>
+        <?php foreach($item->team()->toStructure() as $team_member): ?>
+            <?php $printed_members++; ?>
+            <span><strong><?= $team_member->persona() ?></strong> (<?= $team_member->ruolo() ?>)<?php if($printed_members < $members): ?>,<?php endif; ?> </span>
+        <?php endforeach; ?>
+    </p></div>
     <div class="cards-team" style="display: flex; width: 100%; justify-content: center; flex-wrap:wrap; text-align: center;">
     
     </div>
 
 <?php endif; ?>
 
-
-<?php if($item->appuntamenti()->isNotEmpty()): ?>
-    <div>
-        <hr style="margin: 0; margin-top: 15px; border: none; border-bottom: 1px solid; opacity: 1; opacity: 1;">
-        <?php $appuntamenti = $item->appuntamenti()->toStructure() ?>
-        <div class="cards-dates" style="display: flex; width: 100%; justify-content: space-between; flex-wrap:wrap;">
-            <?php foreach($appuntamenti as $appuntamento): ?>
+    <?php if ($item->deadline()->isNotEmpty()): ?>
+        <?php $deadline_exist = "on" ?>
+    <?php endif; ?>
+    <?php if ($item->deadline()->isNotEmpty() && strtotime($item->deadline()) >= strtotime('today')): ?>
+        <hr style="border: none; border-top: 1px solid; opacity: 1;">
+        <?php $deadline_toggle = "on" ?>
+        <?php $deadline = $item->deadline() ?>
+        <div class="cards-dates" style="display: flex; width: 100%; justify-content: center; flex-wrap:wrap; ">
             <?php 
             $formatter = new IntlDateFormatter('it_IT', IntlDateFormatter::NONE, IntlDateFormatter::NONE);
-            $formatter->setPattern('d MMM Y'); // Modello simile a %d – %b – %Y;
+            $formatter->setPattern('d MMMM Y'); // Modello simile a %d – %b – %Y;
             ?>
-            <span style="border: none; border-bottom: 1px solid; opacity: 1; text-transform: uppercase; padding-top: 15px; padding-bottom: 15px; text-align: center;" class="time"><strong><?= $formatter->format($appuntamento->giorno()->toDate()) ?></strong></span>  <span class="time" style="border: none; border-bottom: 1px solid; opacity: 1; text-align: center; border-left: 1px solid; padding-top: 15px; padding-bottom: 15px;"><?= $appuntamento->orario_inizio()->toDate('H:i') ?> <?php if($appuntamento->orario_fine()->isNotEmpty()): ?>→ <?= $appuntamento->orario_fine()->toDate('H:i') ?><?php endif; ?></span>
-            <?php endforeach; ?>
+            <span id="deadline" class="center" style="width: fit-content; display: flex; justify-content: space-between;" class="time">
+                <strong style="min-width: fit-content;">DEADLINE</strong> 
+                → 
+                <strong style="min-width: fit-content;"><?= $formatter->format($deadline->toDate()) ?></strong>
+            </span>
         </div>
-        <hr style="margin: 0; margin-bottom: 0; border: none!important;">
-    </div>
-<?php endif; ?>
+    <?php else: ?>
+    <?php endif; ?>
 
-<?php if($item->dove()->isNotEmpty()): ?>
-<div class="location">
-    <?php foreach($item->dove()->toPages() as $luogo): ?>
-        📍 <?= $luogo->title() ?>
-    <?php endforeach; ?>
-</div>
-<?php endif; ?>
 
     <?php 
     $formatter = new IntlDateFormatter('it_IT', IntlDateFormatter::NONE, IntlDateFormatter::NONE);
@@ -105,6 +124,9 @@
             ])?>
             <?php endif; ?>
         <?php endif; ?>
+
+
+
 
         <?php
 
@@ -140,11 +162,5 @@ if (!$deadline && $current->appuntamenti()->isNotEmpty()) {
 }
 
 ?>
-<?php if (($incoming_deadline_bool || $incoming_appointment_bool) && $hasAvailableSeats): ?>
-    <span id="bollino" class="bollino_manca_poco">ISCRIZIONI<br>IN CHIUSURA</span>
-<?php elseif ($deadline_toggle == "on" && $deadline_bool && $hasAvailableSeats): ?>
-    <span id="bollino" class="bollino_iscriviti">ISCRIZIONI<br>APERTE</span>
-<?php elseif ($deadline_exist == "on"): ?>
-    <span id="bollino" class="bollino_chiuse">ISCRIZIONI<br>CHIUSE</span>
-<?php endif; ?>
+
 </div>

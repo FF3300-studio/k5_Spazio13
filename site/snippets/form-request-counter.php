@@ -11,8 +11,7 @@ if ($formData['max'] && $formData['max'] > 0) {
 ?>
 
 <?php if ($formData['max']): ?>
-    <br>
-    <p style="min-width: 100%!important; display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 5px;">
+    <p style="min-width: 100%!important; display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 5px; margin-top: 15px;">
         <span style="min-width: auto!important; font-size: 14px;"><?= $formData['count'] ?> iscrizioni</span> 
         <?php if ($formData['available'] !== null): ?>
         <span style="min-width: auto!important; font-size: 14px;"><?= $formData['available'] ?> posti disponibili</span>

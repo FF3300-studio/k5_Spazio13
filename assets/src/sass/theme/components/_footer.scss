@@ -67,8 +67,19 @@ footer {
   }
 }
 .footer {
-  @include media-breakpoint-down(sm) {
+  figure{
+    margin-bottom: 0!important;
+    img{
+      margin-bottom: 0!important;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
     padding: 0;
+    figure{
+      margin-top: 30px!important;
+      margin-bottom: 30px!important;
+    }
   }
 }
 // Mobile override per layout

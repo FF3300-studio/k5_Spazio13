@@ -38,6 +38,11 @@
     font-size: 18px;
     width: auto;
   }
+  .cards-dates{
+    @include media-breakpoint-down(lg) {
+      flex-wrap: wrap!important;
+    }
+  }
   .card-image-container {
     position: relative;
     width: 100%;

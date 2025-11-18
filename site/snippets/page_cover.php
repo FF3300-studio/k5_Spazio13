@@ -20,7 +20,7 @@
       <?php endif; ?>
 
     <div <?php if(!$page->thumbnail()->isNotEmpty()): ?> style="flex-grow: 1"<?php endif; ?> class="page-informations <?= strtolower($page->child_category_selector()) ?>"> <!-- Apertura div page-informations -->
-      <?php snippet('card-info',[
+      <?php snippet('card-info-alt',[
               'item' => $page,
               'direction' => 'column',
               'tag_toggle' => true,
