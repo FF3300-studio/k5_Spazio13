@@ -1,65 +1,77 @@
+@use "sass:math";
 @use "../shared" as *;
 @import "../base/typography";
 
 /* BLOCK CTA */
 .block-cta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 4px 8px;
-  border-radius: 0;
-  margin: 0;
-  @include media-breakpoint-down(sm) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  a {
-    display: inline-block;
-    flex-grow: 1;
-    min-width: fit-content;
-    white-space: nowrap;
-    @extend %button;
-    @extend %small;
-    font-weight: 700;
-    font-family: "medium";
-    border: 2px solid $color-theme;
-    margin: $spacer/3 $spacer/6;
-    padding: $spacer / 1.5 $spacer * 1.5;
-    @include media-breakpoint-up(xl) {
-    margin: $spacer-xl/3 $spacer-xl/6;
-      padding: $spacer-xl / 1.5 $spacer-xl * 1.5;
-    }
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 0;
+    margin: 0;
+
     @include media-breakpoint-down(sm) {
-      margin: $spacer-sm / 2 $spacer-sm 0 0;
-      padding: $spacer-sm / 1.5 $spacer-sm * 1.5;
+        flex-direction: column;
+        align-items: flex-start;
     }
-    &:hover {
-      color: $color-black!important;
-      background-color: $color-hover!important;
-      border-color: $color-black!important;
+
+    a {
+        display: inline-block;
+        flex-grow: 1;
+        min-width: fit-content;
+        white-space: nowrap;
+        @extend %button;
+        @extend %small;
+        font-weight: 700;
+        font-family: "medium";
+        border: 2px solid $color-theme;
+        margin: math.div($spacer, 3) math.div($spacer, 6);
+        padding: math.div($spacer, 1.5) $spacer * 1.5;
+
+        @include media-breakpoint-up(xl) {
+            margin: math.div($spacer-xl, 3) math.div($spacer-xl, 6);
+            padding: math.div($spacer-xl, 1.5) $spacer-xl * 1.5;
+        }
+
+        @include media-breakpoint-down(sm) {
+            margin: math.div($spacer-sm, 2) $spacer-sm 0 0;
+            padding: math.div($spacer-sm, 1.5) $spacer-sm * 1.5;
+        }
+
+        &:hover {
+            color: $color-black !important;
+            background-color: $color-hover !important;
+            border-color: $color-black !important;
+        }
+
+        // Varianti
+        &.square {
+            border-radius: 0;
+        }
+
+        &.round {
+            border-radius: 100vw;
+        }
+
+        &.positive {
+            color: $color-theme;
+            background-color: $color-white;
+
+            &:hover {
+                color: $color-white;
+                background-color: $color-theme;
+            }
+        }
+
+        &.negative {
+            color: $color-white;
+            background-color: $color-theme;
+
+            &:hover {
+                color: $color-white;
+                background-color: $color-theme;
+            }
+        }
     }
-    // Varianti
-    &.square {
-      border-radius: 0;
-    }
-    &.round {
-      border-radius: 100vw;
-    }
-    &.positive {
-      color: $color-theme;
-      background-color: $color-white;
-      &:hover {
-        color: $color-white;
-        background-color: $color-theme;
-      }
-    }
-    &.negative {
-      color: $color-white;
-      background-color: $color-theme;
-      &:hover {
-        color: $color-white;
-        background-color: $color-theme;
-      }
-    }
-  }
 }

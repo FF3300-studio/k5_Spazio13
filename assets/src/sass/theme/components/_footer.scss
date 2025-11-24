@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "../shared" as *;
 @import "../base/typography";
 
@@ -12,6 +13,7 @@
   padding: 0;
   justify-content: center;
 }
+
 footer {
   display: flex;
   flex-direction: row;
@@ -23,31 +25,39 @@ footer {
   padding: $spacer-sm 0;
   background-color: #000;
   color: white;
+
   &.first {
     justify-content: center;
   }
+
   .logo {
     margin-top: 0;
     min-width: 15vw;
     padding-top: 0;
+
     a {
       color: black;
+
       &:hover {
         color: #f30;
       }
     }
   }
+
   .credits {
-    margin-right: $spacer-sm / 2;
+    margin-right: math.div($spacer-sm, 2);
   }
+
   .spin-offs a:hover,
   .social a:hover {
     opacity: 0.5;
   }
+
   .social a {
     margin: 0 0.5em;
   }
 }
+
 // Layout footer specifico (attenzione: il selettore era fragile)
 .footer .row {
 
@@ -59,29 +69,35 @@ footer {
   p {
     color: $color-black;
   }
+
   a {
     color: $color-theme;
+
     &:hover {
-      color: $color-black!important;
+      color: $color-black !important;
     }
   }
 }
+
 .footer {
-  figure{
-    margin-bottom: 0!important;
-    img{
-      margin-bottom: 0!important;
+  figure {
+    margin-bottom: 0 !important;
+
+    img {
+      margin-bottom: 0 !important;
     }
   }
 
   @include media-breakpoint-down(md) {
     padding: 0;
-    figure{
-      margin-top: 30px!important;
-      margin-bottom: 30px!important;
+
+    figure {
+      margin-top: 30px !important;
+      margin-bottom: 30px !important;
     }
   }
 }
+
 // Mobile override per layout
 @media screen and (max-width: 900px) {
   .bg-layout.footer .row {

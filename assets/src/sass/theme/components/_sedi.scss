@@ -1,7 +1,7 @@
 @use "../shared" as *;
-@import "../base/typography";
+@use "../base/typography" as *;
 
-.select-input{
+.select-input {
     padding: $spacer;
     display: flex;
     justify-content: center;
@@ -9,11 +9,12 @@
     width: 100%;
     height: fit-content;
 }
-form.sedi{
+
+form.sedi {
     @extend %small;
     background-color: $color-theme-bis;
     padding: $spacer * 2;
-    margin-bottom: 0!important;
+    margin-bottom: 0 !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,13 +22,16 @@ form.sedi{
     height: fit-content;
     flex-direction: row;
     font-variation-settings: 'wght' 666;
-    .selector{
-        gap: 0!important;
-        align-items: stretch!important;
+
+    .selector {
+        gap: 0 !important;
+        align-items: stretch !important;
     }
+
     label {
         color: $color-theme;
-    }    
+    }
+
     select {
         @extend %small;
         color: $color-theme;
@@ -35,10 +39,12 @@ form.sedi{
         font-variation-settings: 'wght' 666;
         border: 2px solid $color-theme;
         outline: none;
-        &:focus{
-        outline: 2px solid $color-hover;
+
+        &:focus {
+            outline: 2px solid $color-hover;
         }
     }
+
     input#button {
         @extend %small;
         margin-left: $spacer;
@@ -47,47 +53,58 @@ form.sedi{
         color: $color-white;
         font-variation-settings: 'wght' 666;
         border: 2px solid $color-black;
-        &:hover{
+
+        &:hover {
             background-color: $color-hover;
             color: $color-black;
         }
-        &:focus{
-            outline: none!important;
+
+        &:focus {
+            outline: none !important;
         }
     }
 }
-.mapboxgl-popup-content{
-    border-radius: 0!important;
-    *{
+
+.mapboxgl-popup-content {
+    border-radius: 0 !important;
+
+    * {
         color: $color-black;
     }
-    color: $color-black!important;
-    background-color: $color-hover!important;
+
+    color: $color-black !important;
+    background-color: $color-hover !important;
 }
-.mapboxgl-popup-tip{
-    border-top-color: $color-hover!important;
-    background-color: none!important;
+
+.mapboxgl-popup-tip {
+    border-top-color: $color-hover !important;
+    background-color: none !important;
 }
-.sede_cover{
+
+.sede_cover {
     position: relative;
-    .meta_informations{
+
+    .meta_informations {
         position: absolute;
         top: 0;
         left: 0;
         padding: 30px;
         height: 100%;
         max-width: 33%;
+
         @include media-breakpoint-down(lg) {
             max-width: 100%;
             height: fit-content;
         }
-        h2{
+
+        h2 {
             font-family: 'black';
             @extend %massive;
-            font-variation-settings: 'wght' 900, 'opsz' 100, 'wdth' 120, 'GRAD' -0.5,    'slnt' 0, 'XTRA' 468.6, 'XOPQ' 96.56, 'YOPQ' 78.9, 'YTLC' 514.56,    'YTUC' 711.28, 'YTAS' 749.45, 'YTDE' -203.57, 'YTFI' 737.84!important;
+            font-variation-settings: 'wght' 900, 'opsz' 100, 'wdth' 120, 'GRAD' -0.5, 'slnt' 0, 'XTRA' 468.6, 'XOPQ' 96.56, 'YOPQ' 78.9, 'YTLC' 514.56, 'YTUC' 711.28, 'YTAS' 749.45, 'YTDE' -203.57, 'YTFI' 737.84 !important;
             text-transform: uppercase;
         }
-        p{
+
+        p {
             font-family: 'medium';
             @extend %large;
             color: $color-theme;
@@ -96,5 +113,9 @@ form.sedi{
 }
 
 * .sede {
-    background-color: $color-white; color: $color-theme; padding: 4px 12px!important; padding-top: 6px!important; max-width: fit-content;
+    background-color: $color-white;
+    color: $color-theme;
+    padding: 4px 12px !important;
+    padding-top: 6px !important;
+    max-width: fit-content;
 }

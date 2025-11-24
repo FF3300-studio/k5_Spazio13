@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "../shared" as *;
 @import "../base/typography";
 
@@ -16,38 +17,46 @@
   filter: blur(100%); // ⚠️ valuta se necessario
   text-decoration: none;
   margin: 0;
+
   // min-height: 100%; 
   @include media-breakpoint-up(xl) {
     margin: 0;
   }
+
   @include media-breakpoint-down(sm) {
     margin: 0;
-    flex-direction: column!important;
+    flex-direction: column !important;
   }
+
   &:hover {
     text-decoration: none;
     background-color: $color-hover;
   }
+
   .cards-title {
     margin-top: 0;
   }
-  .cards-text p {
-  }
+
+  .cards-text p {}
+
   .cards-dates span,
   .cards-place span {
     font-size: 18px;
     width: auto;
   }
-  .cards-dates{
+
+  .cards-dates {
     @include media-breakpoint-down(lg) {
-      flex-wrap: wrap!important;
+      flex-wrap: wrap !important;
     }
   }
+
   .card-image-container {
     position: relative;
     width: 100%;
     padding-top: 75%; // Aspect ratio 16:9
     overflow: hidden;
+
     img {
       position: absolute;
       top: 50%;
@@ -69,52 +78,65 @@
   transition: 0.1s ease;
   min-width: 100%;
 }
+
 // =========================
 // Card Container / Tag / Meta
 // =========================
 .cards-locator {
   margin: $spacer 0;
+
   @include media-breakpoint-up(xl) {
     margin: $spacer-xl 0;
   }
+
   @include media-breakpoint-down(sm) {
     margin: $spacer-sm 0;
   }
 }
+
 .cards-categories {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   margin-bottom: 0;
 }
+
 .related-content-container {
   margin-bottom: $spacer * 1.5;
 }
+
 .paginator {
   margin-top: $spacer * 4;
+
   @include media-breakpoint-up(xl) {
     margin-top: $spacer-xl * 4;
   }
+
   @include media-breakpoint-down(sm) {
     margin-top: $spacer-sm * 4;
   }
+
   .single-filter {
     background-color: $color-black;
+
     &:hover {
       background-color: $color-hover;
     }
   }
 }
+
 .time {
   display: flex;
   justify-content: center;
   align-items: center;
   min-width: 50%;
   flex-grow: 2;
+
   @include media-breakpoint-down(sm) {
     font-size: $small;
   }
 }
+
 // =========================
 // Tag
 // =========================
@@ -132,97 +154,117 @@ span.tag {
   border: 1px solid $color-black !important;
   font-weight: 700;
   text-transform: uppercase;
+
   &.parent {
     background-color: $color-theme !important;
     color: $color-white !important;
     border-color: $color-theme !important;
   }
 }
+
 // =========================
 // Related & Siblings
 // =========================
 ul.siblings {
   background-color: $color-theme-bis;
+
   li {
     @extend %small;
+
     * {
       color: $color-black;
     }
+
     &:hover * {
       color: $color-hover;
     }
   }
 }
+
 a.related span {
   color: $color-black;
+
   &:hover {
     color: $color-hover;
   }
 }
+
 // =========================
 // Card items & responsive
 // =========================
 .single-cards {
   padding: 0;
-  margin: 0 $spacer; 
-  min-width: calc(20% - $spacer*2); 
-  max-width: calc(50% - $spacer*2); 
+  margin: 0 $spacer;
+  min-width: calc(20% - $spacer*2);
+  max-width: calc(50% - $spacer*2);
   flex-grow: 0;
   margin-bottom: $spacer * 2;
+
   @include media-breakpoint-up(xl) {
-    margin: 0 $spacer-xl; 
+    margin: 0 $spacer-xl;
     margin-bottom: $spacer-xl * 2;
-    min-width: calc(20% - $spacer-sm*2); 
-    max-width: calc(25% - $spacer-sm*2); 
+    min-width: calc(20% - $spacer-sm*2);
+    max-width: calc(25% - $spacer-sm*2);
   }
+
   @include media-breakpoint-down(md) {
-    margin: 0 $spacer-sm; 
+    margin: 0 $spacer-sm;
     margin-bottom: $spacer-sm * 2;
   }
-  
+
   @include media-breakpoint-down(sm) {
-    min-width: calc(100% - $spacer-sm*2); 
-    max-width: calc(100% - $spacer-sm*2); 
+    min-width: calc(100% - $spacer-sm*2);
+    max-width: calc(100% - $spacer-sm*2);
     flex-grow: 1;
-    margin: 0 $spacer-sm; 
+    margin: 0 $spacer-sm;
     margin-bottom: $spacer-sm * 2;
   }
 }
+
 .cards-details {
-  &.orange{
-    *:not(#bollino){
+  &.orange {
+    *:not(#bollino) {
       color: $color-theme;
-      border-color: $color-theme!important;
+      border-color: $color-theme !important;
     }
-    * span.tag{
-      color: $color-theme!important;
+
+    * span.tag {
+      color: $color-theme !important;
     }
+
     * span.parent {
-      color: $color-white!important;
+      color: $color-white !important;
     }
   }
+
   text-align: left;
   position: relative;
   width: 100%;
+
   @include media-breakpoint-down(sm) {
     padding: $spacer-sm * 1.5;
   }
+
   p {
     margin: 0;
   }
+
   .location {
     margin-top: $spacer;
   }
 }
+
 #deadline {
   @include media-breakpoint-down(sm) {
     min-width: fit-content !important;
   }
 }
+
 span#deadline.mobile,
 span#deadline.laptop {
   min-width: 33% !important;
 }
+
 // =========================
 // Bollini dinamici
 // =========================
@@ -235,11 +277,11 @@ span#deadline.laptop {
   text-align: right;
   display: inline-block;
   border-radius: 100vw;
-  padding: $spacer / 3 $spacer;
+  padding: math.div($spacer, 3) $spacer;
   max-width: fit-content;
   min-width: 0;
   z-index: 99;
-  text-align: center; 
+  text-align: center;
   line-height: 1em;
 
 }
@@ -249,21 +291,24 @@ span.bollino_iscriviti {
   color: $color-black !important;
   background-color: $color-theme;
   animation: balla 1s infinite alternate;
-  z-index: 3; 
+  z-index: 3;
 }
+
 span.bollino_manca_poco {
   @include bollino-base;
   color: $color-black !important;
   background-color: $color-hover;
   animation: balla 1s infinite alternate;
-  z-index: 4; 
+  z-index: 4;
 }
+
 span.bollino_chiuse {
   @include bollino-base;
   color: $color-white !important;
   background-color: $color-theme-bis;
-  z-index: 3; 
+  z-index: 3;
 }
+
 // =========================
 // Keyframes Animazioni
 // =========================
@@ -272,6 +317,7 @@ span.bollino_chiuse {
     transform: scale(0.95) rotate(-5deg);
     filter: blur(100%); // ⚠️ valuta se necessario
   }
+
   100% {
     transform: scale(1.05) rotate(5deg);
     filter: blur(100%); // ⚠️ valuta se necessario
@@ -290,9 +336,9 @@ span.bollino_chiuse {
   }
 }
 
-* #nomarginmobile{
+* #nomarginmobile {
   @include media-breakpoint-down(lg) {
-    margin-top: 0!important;
-    margin-bottom: 0!important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
   }
 }

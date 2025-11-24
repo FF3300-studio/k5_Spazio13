@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "../shared" as *;
 @import "../base/typography";
 
@@ -7,23 +8,29 @@
   0% {
     background: $color-white;
   }
+
   25% {
     background: $color-theme;
   }
+
   50% {
     background: $color-white;
   }
+
   75% {
     background: $color-theme;
   }
+
   100% {
     background: $color-white;
   }
 }
-.search-header{
-  margin-top: 60px!important;
+
+.search-header {
+  margin-top: 60px !important;
   display: flex;
 }
+
 .search-bar {
   width: 100%;
   display: flex;
@@ -33,6 +40,7 @@
   margin-bottom: $spacer * 4;
   background-color: $color-white;
   transition: all 0.3s;
+
   // border-top: 2px solid $color-black;
   // animation-name: backgroundColorPalette;
   // animation-duration: 10s;
@@ -44,6 +52,7 @@
     justify-content: center;
     flex-direction: row;
   }
+
   input#bar {
     border: 2px solid black;
     padding: 0 $spacer-sm;
@@ -51,18 +60,22 @@
     border-radius: 100vw;
     text-align: center;
     min-width: 10vw;
+
     @media screen and (max-width: 750px) {
       min-width: 200px;
     }
+
     @media screen and (min-width: 1600px) {
       min-width: fit-content;
     }
+
     &::placeholder {
       color: gray;
       text-align: center;
       width: 100%;
     }
   }
+
   input#button {
     @extend %button;
     @extend %small;
@@ -73,26 +86,32 @@
     text-transform: uppercase;
     font-family: "extrabold", Helvetica, Arial, sans-serif;
     margin: 0;
-    padding: $spacer / 2 $spacer * 1.5;
+    padding: math.div($spacer, 2) $spacer * 1.5;
+
     @include media-breakpoint-up(xl) {
       margin: 0 $spacer-xl;
-      padding: $spacer-xl / 2 $spacer-xl * 1.5;
+      padding: math.div($spacer-xl, 2) $spacer-xl * 1.5;
     }
+
     @include media-breakpoint-down(sm) {
       margin: 0 $spacer-sm;
-      padding: $spacer-sm / 2 $spacer-sm * 1.5;
+      padding: math.div($spacer-sm, 2) $spacer-sm * 1.5;
     }
+
     &:hover {
       background-color: $color-hover;
     }
   }
 }
+
 input:focus {
   outline: 2px solid $color-hover;
 }
+
 input#button {
   outline: inherit;
 }
+
 a.result {
   display: flex;
   flex-direction: column;
@@ -100,28 +119,35 @@ a.result {
   width: 100%;
   max-width: calc(100% - $spacer-sm);
   margin: $spacer-sm auto 0;
+
   &:last-of-type {
     margin-bottom: $spacer-sm;
   }
+
   @media screen and (max-width: 900px) {
     max-width: calc(100% - $spacer-sm);
   }
+
   h2 {
     color: black;
-    margin-bottom: $spacer-sm / 3;
+    margin-bottom: math.div($spacer-sm, 3);
   }
+
   p {
     color: $color-black;
-    margin-bottom: $spacer-sm / 3;
+    margin-bottom: math.div($spacer-sm, 3);
     font-size: $extrasmall;
   }
+
   &:hover * {
     color: $color-hover;
   }
 }
+
 .relative {
   position: relative;
 }
+
 .close_search {
   @extend %button;
   @extend %small;
@@ -130,32 +156,39 @@ a.result {
   display: inline-block;
   text-transform: uppercase;
   font-family: "extrabold", Helvetica, Arial, sans-serif;
-  padding: 7.5px 11.5px!important;
+  padding: 7.5px 11.5px !important;
   margin: 0 $spacer;
+
   @include media-breakpoint-up(xl) {
     margin: 0 $spacer-xl;
   }
+
   @include media-breakpoint-down(sm) {
     margin: 0 $spacer-sm;
   }
+
   &:hover {
     background-color: $color-hover;
     color: $color-white;
   }
 }
+
 // Dispositivi
 @media screen and (max-width: 900px) {
   .mobile {
     display: block;
   }
+
   .laptop {
     display: none;
   }
 }
+
 @media screen and (min-width: 900px) {
   .mobile {
     display: none;
   }
+
   .laptop {
     display: block;
   }

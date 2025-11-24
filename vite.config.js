@@ -44,6 +44,7 @@ export default defineConfig(({ command }) => {
     css: {
       preprocessorOptions: {
         scss: {
+          silenceDeprecations: ['import', 'global-builtin', 'color-functions'],
           // additionalData: @import "sass/variables/colors.scss"; @import "sass/variables/typography.scss"; @import "sass/variables/structure.scss";, // Automatically import variables
         },
       },

@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "../settings" as *;
 
 %micro {
@@ -122,33 +123,35 @@
 }
 
 %button {
-  padding: $spacer / 2.5 $spacer;
+  padding: math.div($spacer, 2.5) $spacer;
   @extend %extrasmall;
   border-radius: 100vw;
   border: 2px solid $color-black;
 }
 
-body{
+body {
   @extend %medium;
 }
 
 * strong {
-  font-variation-settings: "wght" $font-black;
+  font-variation-settings: "wght"$font-black;
 }
 
 h1 {
   @extend %massive;
-  font-variation-settings: "wght" $font-bold;
+  font-variation-settings: "wght"$font-bold;
+
   & strong {
-    font-variation-settings: "wght" $font-black;
+    font-variation-settings: "wght"$font-black;
   }
 }
 
 h2 {
   @extend %extralarge;
-  font-variation-settings: "wght" $font-bold;
+  font-variation-settings: "wght"$font-bold;
+
   & strong {
-    font-variation-settings: "wght" $font-black;
+    font-variation-settings: "wght"$font-black;
   }
 }
 
@@ -186,7 +189,7 @@ h5 {
   text-decoration: underline;
 }
 
-hr{
+hr {
   opacity: 1;
   border: none;
   border-top: 1px solid $color-theme;

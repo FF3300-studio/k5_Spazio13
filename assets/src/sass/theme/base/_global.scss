@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "../settings" as *;
 @use "typography" as *;
 
@@ -11,12 +12,13 @@
   margin-left: auto !important;
 }
 
-a {
+* a {
   cursor: pointer !important;
   text-decoration: none !important;
-  color: $color-theme!important;
+  color: $color-theme;
+
   &:hover {
-    color: $color-hover!important;
+    color: $color-hover !important;
     cursor: pointer !important;
   }
 }
@@ -44,18 +46,18 @@ figure {
 }
 
 figcaption {
-  padding: $spacer / 3 0;
+  padding: math.div($spacer, 3) 0;
   color: $color-black;
   text-align: center;
   margin: $spacer;
 
   @include media-breakpoint-up(xl) {
-    padding: $spacer-xl / 3 0;
+    padding: math.div($spacer-xl, 3) 0;
     margin: $spacer-xl;
   }
 
   @include media-breakpoint-down(sm) {
-    padding: $spacer-sm / 3 0;
+    padding: math.div($spacer-sm, 3) 0;
     margin: $spacer-sm;
   }
 }
@@ -64,7 +66,7 @@ figcaption {
 body {
   font-family: "medium", Helvetica, Arial, sans-serif;
   @extend %small;
-  line-height: 1.2em!important;
+  line-height: 1.2em !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: visible !important;
@@ -76,10 +78,11 @@ body {
     position: relative;
   }
 }
-.nws{
-  &:hover{
-    *{
-      color: $color-hover!important;
+
+.nws {
+  &:hover {
+    * {
+      color: $color-hover !important;
     }
   }
 }

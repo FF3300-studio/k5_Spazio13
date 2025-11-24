@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "../shared" as *;
 @import "../base/typography";
 
@@ -11,6 +12,7 @@
   @include media-breakpoint-up(xl) {
     --cm-gap: #{$spacer-xl};
   }
+
   @include media-breakpoint-down(md) {
     --cm-gap: #{$spacer-sm};
   }
@@ -20,28 +22,33 @@
 .cm-block__header {
   display: flex;
   align-items: flex-start;
-  gap: $spacer/3;
-  margin: $spacer/3;
+  gap: math.div($spacer, 3);
+  margin: math.div($spacer, 3);
 
-  @include media-breakpoint-up(xl) { margin: $spacer-xl/3; }
-  @include media-breakpoint-down(md) { margin: $spacer-sm/3; }
+  @include media-breakpoint-up(xl) {
+    margin: math.div($spacer-xl, 3);
+  }
+
+  @include media-breakpoint-down(md) {
+    margin: math.div($spacer-sm, 3);
+  }
 }
 
 * .row .blocks .cm-block__title {
   @extend %large;
   font-family: "extrabold", Helvetica, Arial, sans-serif;
-  margin-left: 0!important;
-  margin-right: auto!important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
 }
 
 .cm-chip {
-    display: inline-block;
-    padding: 6px 10px;
-    font-weight: 900;
-    background-color: gray;
-    color: lightgray;
-    margin-left: 15px;
-    border: 2px solid gray;
+  display: inline-block;
+  padding: 6px 10px;
+  font-weight: 900;
+  background-color: gray;
+  color: lightgray;
+  margin-left: 15px;
+  border: 2px solid gray;
 }
 
 /* Card condivisa (griglia + carosello) */
@@ -82,17 +89,27 @@
 .cm-card__body {
   padding: $spacer $spacer*1.25;
 
-  @include media-breakpoint-up(xl) { padding: $spacer-xl $spacer-xl*1.25; }
-  @include media-breakpoint-down(md) { padding: $spacer-sm $spacer-sm*1.25; }
+  @include media-breakpoint-up(xl) {
+    padding: $spacer-xl $spacer-xl*1.25;
+  }
+
+  @include media-breakpoint-down(md) {
+    padding: $spacer-sm $spacer-sm*1.25;
+  }
 }
 
 .cm-card__title {
   @extend %medium;
   font-family: "extrabold", Helvetica, Arial, sans-serif;
-  margin: 0 0 $spacer/4 0;
+  margin: 0 0 math.div($spacer, 4) 0;
 
-  @include media-breakpoint-up(xl) { margin-bottom: $spacer-xl/4; }
-  @include media-breakpoint-down(md) { margin-bottom: $spacer-sm/4; }
+  @include media-breakpoint-up(xl) {
+    margin-bottom: math.div($spacer-xl, 4);
+  }
+
+  @include media-breakpoint-down(md) {
+    margin-bottom: math.div($spacer-sm, 4);
+  }
 }
 
 .cm-card__excerpt {
@@ -108,7 +125,8 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  @include media-breakpoint-down(md) { 
+
+  @include media-breakpoint-down(md) {
     flex-direction: column;
   }
 }
@@ -119,30 +137,37 @@
   position: relative;
   padding: 0;
 }
-.cm-carousel .single-cards, .cm-carousel .col-lg-4 {
-    min-width: 300px!important;
-    max-width: calc(33vw - $spacer)!important;
-    width: auto!important;
-    margin: 0!important;
-    margin-bottom: $spacer!important;
-    @include media-breakpoint-up(xl) { 
-    min-width: 27vw!important;
-    }
-    @include media-breakpoint-down(md) { 
-    min-width: 75vw!important;
-    }
-}
-.cm-grid .single-cards, .cm-grid .col-lg-4 {
-    max-width: calc(50% - $spacer)!important;
-    width: auto!important;
-    margin: 0!important;
-    margin-bottom: $spacer!important;
 
-    @include media-breakpoint-down(md) { 
-    margin-bottom: $spacer-sm!important;
-    min-width: fit-content!important;
-    }
+.cm-carousel .single-cards,
+.cm-carousel .col-lg-4 {
+  min-width: 300px !important;
+  max-width: calc(33vw - $spacer) !important;
+  width: auto !important;
+  margin: 0 !important;
+  margin-bottom: $spacer !important;
+
+  @include media-breakpoint-up(xl) {
+    min-width: 27vw !important;
+  }
+
+  @include media-breakpoint-down(md) {
+    min-width: 75vw !important;
+  }
 }
+
+.cm-grid .single-cards,
+.cm-grid .col-lg-4 {
+  max-width: calc(50% - $spacer) !important;
+  width: auto !important;
+  margin: 0 !important;
+  margin-bottom: $spacer !important;
+
+  @include media-breakpoint-down(md) {
+    margin-bottom: $spacer-sm !important;
+    min-width: fit-content !important;
+  }
+}
+
 .cm-carousel__track {
   display: grid;
   grid-auto-flow: column;
@@ -151,10 +176,13 @@
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: $spacer/2;
+  padding-bottom: math.div($spacer, 2);
 
   /* scrollbar "soft" */
-  &::-webkit-scrollbar { height: 8px; }
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
   &::-webkit-scrollbar-thumb {
     background: $color-filter-bar;
     border-radius: 100vw;
@@ -197,18 +225,19 @@
 .cm-carousel__next { right: $spacer*1.5; }
 */
 * #secondary * .card-master {
-  flex-direction: column!important;
+  flex-direction: column !important;
 }
+
 * #secondary .card-master .card-image-container {
   padding-top: 50%;
-  img{
+
+  img {
     object-fit: cover;
   }
 }
 
 * .card-master {
   @include media-breakpoint-down(md) {
-    flex-direction: column!important;
+    flex-direction: column !important;
   }
 }
-

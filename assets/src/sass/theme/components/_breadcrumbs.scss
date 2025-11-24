@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "../shared" as *;
 @import "../base/typography";
 
@@ -10,33 +11,41 @@
   border-top: 2px solid $color-black;
   border-bottom: 2px solid $color-black;
   @extend %micro;
+
   @include media-breakpoint-up(xl) {
     padding: $spacer-xl $spacer-xl * 3;
   }
+
   @include media-breakpoint-down(sm) {
     padding: $spacer-sm $spacer-sm * 3;
   }
+
   ul {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
     margin: 0;
+
     li {
       padding: 0;
       margin: 0;
       font-size: 120%;
+
       .arrow {
         display: inline-block;
         position: relative;
         top: 0;
-        margin: 0 $spacer / 2;
+        margin: 0 math.div($spacer, 2);
+
         @include media-breakpoint-up(xl) {
-          margin: 0 $spacer-xl / 2;
+          margin: 0 math.div($spacer-xl, 2);
         }
+
         @include media-breakpoint-down(sm) {
-          margin: 0 $spacer-sm / 2;
+          margin: 0 math.div($spacer-sm, 2);
         }
       }
+
       a,
       .current {
         @extend %micro;
@@ -44,6 +53,7 @@
         text-transform: uppercase;
         margin-bottom: 0;
       }
+
       .current {
         font-family: "extrabold", Helvetica, Arial, sans-serif;
       }
