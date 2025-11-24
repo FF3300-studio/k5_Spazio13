@@ -14,8 +14,9 @@
 a {
   cursor: pointer !important;
   text-decoration: none !important;
-
+  color: $color-theme!important;
   &:hover {
+    color: $color-hover!important;
     cursor: pointer !important;
   }
 }
@@ -59,13 +60,6 @@ figcaption {
   }
 }
 
-a {
-  color: $color-black;
-
-  &:hover {
-    color: $color-hover;
-  }
-}
 
 body {
   font-family: "medium", Helvetica, Arial, sans-serif;
