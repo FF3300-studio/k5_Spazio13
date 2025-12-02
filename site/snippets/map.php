@@ -87,13 +87,13 @@ $textHtml      = "<strong>{$titleHtml}</strong><br>{$indirizzoHtml}";
       zoom: MAP_DATA.zoom,
       minZoom: 4,
       maxZoom: 18,
-      attributionControl: false
+      attributionControl: false,
+      cooperativeGestures: true
     });
 
     if (MAP_DATA.showControls) {
       map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
     }
-    map.scrollZoom.disable();
 
     let triedFallback1 = false, triedFallback2 = false;
     map.on('error', (e) => {
@@ -167,8 +167,8 @@ $textHtml      = "<strong>{$titleHtml}</strong><br>{$indirizzoHtml}";
       document.querySelectorAll('.marker-html').forEach(el => el.remove());
       const el = document.createElement('div');
       el.className = 'marker-html';
-      el.style.width = '5px';
-      el.style.height = '5px';
+      el.style.width = '50px';
+      el.style.height = '50px';
       el.style.backgroundImage = `url('${iconUrl}')`;
       el.style.backgroundRepeat = 'no-repeat';
       el.style.backgroundPosition = 'center';

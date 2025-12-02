@@ -1,6 +1,7 @@
 <?php snippet('header') ?>
 <?php snippet('menu') ?>
 <?php snippet('check_banner',['posizione' => 'sopra']) ?>
+<?php snippet('page_navigator') ?>
 
 <?php snippet(name: 'csv-search')?>
 <?php snippet('page_cover') ?>

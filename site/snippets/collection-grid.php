@@ -29,8 +29,8 @@ if (!empty($activeCategories)) {
         </style>
     <?php endif; ?>
 
-    <div class="block-grid-a-list">        
-        <?php foreach ($filtered->sortBy('date', 'desc') as $child): ?>
+    <div class="block-grid-a-list" style="justify-content: center; display: flex;">        
+        <?php foreach ($filtered->sortBy('data_di_pubblicazione', 'desc') as $child): ?>
             <?php snippet('card-grid', [
                 'item' => $child,
                 'thumb_toggle' => true, 

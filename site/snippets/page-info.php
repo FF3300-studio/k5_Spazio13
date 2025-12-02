@@ -3,7 +3,7 @@
 <?php $deadline_toggle = "off"; ?>
 <?php $deadline = $item->deadline() OR NULL ?>
 <?php $facilitato = false ?>
-<div class="page-details orange" style="<?php if($page->parent() !== NULL): ?>padding: 15px; min-width: fit-content; margin: 0 auto!important;<?php else: ?>padding: 15px;<?php endif; ?> margin: 0;" <?php  if($direction == "row"): ?>style="margin-left: 15px"<?php endif; ?>>
+<div class="page-details orange" style="<?php if($page->parent() !== NULL): ?>padding: 15px; min-width: auto; margin: 0 auto!important;<?php else: ?>padding: 15px;<?php endif; ?> margin: 0;" <?php  if($direction == "row"): ?>style="margin-left: 15px"<?php endif; ?>>
 
 <?php if($tag_toggle == true AND $item->child_category_selector()->isNotEmpty()): ?>
 <div class="cards-categories">
@@ -106,7 +106,7 @@
 <hr style="border: none; border-top: 1px solid; opacity: 1;">
 <?php endif; ?>
 
-<div class="cards-title" style="margin:0!important;">
+<div class="page-title" style="margin:0!important;">
     <h2 style="font-size: 300%"><?= $item->title() ?></h2>
 </div>
 

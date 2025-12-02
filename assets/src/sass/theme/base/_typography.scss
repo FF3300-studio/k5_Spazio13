@@ -153,6 +153,10 @@ h2 {
   & strong {
     font-variation-settings: "wght"$font-black;
   }
+
+  @include media-breakpoint-down(sm) {
+    text-align: left !important;
+  }
 }
 
 h3 {
@@ -161,6 +165,7 @@ h3 {
 
 h4 {
   @extend %medium;
+  font-variation-settings: "wght"$font-black;
 }
 
 h5 {
@@ -193,7 +198,7 @@ h5 {
     }
 
     @include media-breakpoint-down(sm) {
-      margin-bottom: $spacer-sm*4;
+      margin-bottom: 0;
     }
   }
 }

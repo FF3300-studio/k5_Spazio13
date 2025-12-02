@@ -19,9 +19,8 @@
 
     @include media-breakpoint-down(sm) {
         flex-direction: column;
-        margin: $spacer-sm * 3 0;
-        padding: $spacer-sm*3 !important;
-        margin-bottom: 0 !important;
+        margin: $spacer-sm 0 !important;
+        padding: $spacer-sm * 3 !important;
     }
 
     .formblock__message__list {
@@ -244,9 +243,10 @@
     }
 
     input {
-        transform: scale(1.5);
+        transform: scale(1.25);
         margin-right: math.div($spacer, 2) !important;
         margin-left: math.div($spacer, 3) !important;
+        margin-top: math.div($spacer, 2) !important;
     }
 }
 
@@ -270,6 +270,10 @@
     flex-direction: row !important;
     margin: 0 !important;
     align-items: center !important;
+
+    @include media-breakpoint-down(sm) {
+        align-items: flex-start !important;
+    }
 
     a {
         color: $color-white;

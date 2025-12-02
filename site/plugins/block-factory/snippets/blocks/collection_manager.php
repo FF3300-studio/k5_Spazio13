@@ -131,22 +131,19 @@ if ($typology === 'manuale') {
     }
 
     $items = $pool;
+    // Sorting logic
+    if ($collectionPage->collection_options()->value() === 'calendar') {
+      $items = $items->sortBy(function ($page) {
+        $structure = $page->appuntamenti()->toStructure();
+        return $structure->isNotEmpty() ? $structure->first()->giorno()->toDate() : PHP_INT_MAX;
+      }, 'desc');
+    } else {
+      $items = $items->sortBy('data_di_pubblicazione', 'desc');
+    }
+  
   }
 }
 
-/**
- * ORDINAMENTO personalizzato:
- * - se "appuntamenti" è popolato → ordina per appuntamenti (futuri → passati)
- * - altrimenti → ordina per ultima modifica (recenti → meno recenti)
- */
-if ($items->isNotEmpty()) {
-  $items = $items->sortBy(
-    function ($p) use ($getSortTimestamp) {
-      return $getSortTimestamp($p);
-    },
-    'desc'
-  );
-}
 
 // Applica limite dopo l'ordinamento
 if ($max > 0) {

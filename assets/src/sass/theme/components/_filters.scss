@@ -5,15 +5,19 @@
 /* CSS relativo al componente FILTRI */
 .container-collection {
   position: sticky;
-  z-index: 200;
+  z-index: 1;
   top: 120px !important;
 
-  @include media-breakpoint-up(xl) {
-    top: 130px !important;
+  @include media-breakpoint-up(md) {
+    top: 80px !important;
   }
 
   @include media-breakpoint-down(md) {
-    top: 50px !important;
+    top: 74px !important;
+  }
+
+  @include media-breakpoint-up(lg) {
+    top: 130px !important;
   }
 
   .collection-filters {
@@ -40,7 +44,7 @@
 .single-filter {
   color: $color-black ;
   background-color: $color-hover ;
-  padding: 0px 8px;
+  padding: 4px 12px;
   border-radius: 100vw;
   margin: $spacer-sm;
   display: inline-block;

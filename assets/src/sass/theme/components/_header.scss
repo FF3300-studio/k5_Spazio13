@@ -45,7 +45,7 @@
     }
 
     .navigation-mobile-flexbox {
-      flex-direction: row;
+      flex-direction: column;
       align-items: flex-start;
       justify-content: center;
       flex-wrap: wrap;
@@ -57,7 +57,9 @@
       margin: $spacer;
 
       @include media-breakpoint-down(lg) {
-        margin: math.div($spacer, 2);
+        margin: $spacer math.div($spacer, 2);
+        margin-top: 0;
+        margin-left: 0;
       }
 
       width: fit-content;
@@ -70,6 +72,7 @@
         color: $color-white;
         background-color: $color-theme;
         border-radius: 0;
+        font-variation-settings: "wght" 700 !important;
 
         &.ismobile {
           color: $color-theme;
@@ -178,7 +181,7 @@
 
     @include media-breakpoint-down(md) {
       align-items: center;
-      padding: 12px;
+      padding: 12px 30px;
     }
 
     * {

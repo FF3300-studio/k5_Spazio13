@@ -59,3 +59,7 @@ fields:
         options:
           positive: positive
           negative: negative
+      is_active:
+        label: Attiva
+        type: toggle  
+        default: true 

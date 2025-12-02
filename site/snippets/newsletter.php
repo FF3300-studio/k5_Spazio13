@@ -1,5 +1,5 @@
 
-<div class="container newsletter" style="padding: 60px 15px; margin: 0;">
+<div class="container newsletter" style="padding: 30px; margin: 0;">
     
     <div class="ns_title" style="margin-bottom: 15px;">
       <h2 class="title" style="margin-top: 0;">
@@ -58,9 +58,9 @@
     </div>
     <div aria-hidden="true" style="position: absolute; left: -5000px;"><input type="text" name="b_05b9023f234614f5bc989c04b_bf556ce058" tabindex="-1" value=""></div>
 
-    <div id="mce-responses" class="clear" >
-        <div class="response" id="mce-error-response" style="color: red; width: 100%; text-align: center; display:none;"></div>
-        <div class="response" id="mce-success-response" style="color: black; width: 100%; text-align: center; display:none"></div>
+    <div id="mce-responses" class="clear" style="display: flex; flex-direction: column; margin-top: 30px;">
+        <div class="response" id="mce-error-response" style="max-width: 750px; margin: 0 auto;color: white; width: 100%; text-align: center; display:none;"></div>
+        <div class="response" id="mce-success-response" style="max-width: 750px; margin: 0 auto;color: white; width: 100%; text-align: center; display:none"></div>
     </div>    
     </form>   
 </div>

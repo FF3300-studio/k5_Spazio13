@@ -2,6 +2,8 @@
 <?php snippet('menu') ?>
 <?php snippet('checkbanner', ['posizione' => 'sopra']) ?>
 
+<?php snippet('page_navigator') ?>
+
 <?php if (!empty($alerts ?? [])): ?>
   <div class="notice notice--warning" style="margin:1rem 0;padding:.8rem 1rem;border:1px solid #f0c36d;background:#fff8e5;border-radius:.5rem;">
     <?php foreach ($alerts as $msg): ?>
@@ -15,10 +17,10 @@
 
 <div class="blocks-container">
   <div class="blocks-container-inner">
-    <div class="row" style="margin-bottom: 0;">
+    <div class="row" style="max-width: 1080px; margin: 0 auto;">
       <div class="column col-lg-12">
         <div class="blocks">
-          <h2 style="font-size: 60px; width: 100%; text-align: center;">
+          <h2 style="font-size: 48px; width: 100%; text-align: center!important;">
             <span style="font-family: 'black'; font-variation-settings: 'wght' 900, 'opsz' 100, 'wdth' 120, 'GRAD' -0.5,    'slnt' 0, 'XTRA' 468.6, 'XOPQ' 96.56, 'YOPQ' 78.9, 'YTLC' 514.56,    'YTUC' 711.28, 'YTAS' 749.45, 'YTDE' -203.57, 'YTFI' 737.84!important;">
               DOVE SIAMO
             </span>

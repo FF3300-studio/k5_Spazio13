@@ -29,16 +29,16 @@
   }
 }
 
-* .column.col-lg-12 {
+* .article .column.col-lg-12 {
   margin: 0px auto;
   max-width: 1080px;
   box-sizing: border-box;
   padding: $spacer;
-  width: calc(100% - $spacer*2);
+  width: auto;
 
   @include media-breakpoint-down(sm) {
-    margin: 0px auto;
-    width: 100%;
+    max-width: 100%;
+    padding: 0
   }
 }
 

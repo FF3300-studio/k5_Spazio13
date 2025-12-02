@@ -7,7 +7,8 @@
 // Card Master
 // =========================
 
-.cards-title h2 {
+.cards-title h2,
+.page-title h2 {
   font-variation-settings: 'wght' 1000, 'opsz' 100, 'wdth' 120, 'GRAD' -0.5, 'slnt' 0, 'XTRA' 468.6, 'XOPQ' 96.56, 'YOPQ' 78.9, 'YTLC' 514.56, 'YTUC' 711.28, 'YTAS' 749.45, 'YTDE' -203.57, 'YTFI' 737.84 !important;
   margin-top: 10px;
 }
@@ -38,11 +39,11 @@
     background-color: $color-hover;
   }
 
-  .cards-title {
+  .cards-title,
+  .page-title {
     margin-top: 0;
   }
 
-  .cards-text p {}
 
   .cards-dates span,
   .cards-place span {
@@ -59,7 +60,12 @@
   .card-image-container {
     position: relative;
     width: 100%;
-    padding-top: 75%; // Aspect ratio 16:9
+    padding-top: 50%; // Aspect ratio 16:9
+
+    @include media-breakpoint-down(sm) {
+      padding-top: 64%; // Aspect ratio 16:9
+    }
+
     overflow: hidden;
 
     img {
@@ -218,8 +224,9 @@ a.related span {
   }
 
   @include media-breakpoint-down(sm) {
-    min-width: calc(100% - $spacer-sm*2);
-    max-width: calc(100% - $spacer-sm*2);
+    min-width: unset !important;
+    max-width: unset !important;
+    width: calc(100% - $spacer-sm*2) !important;
     flex-grow: 1;
     margin: 0 $spacer-sm;
     margin-bottom: $spacer-sm * 2;
@@ -244,7 +251,7 @@ a.related span {
 
   text-align: left;
   position: relative;
-  width: 100%;
+  width: auto;
 
   @include media-breakpoint-down(sm) {
     padding: $spacer-sm * 1.5;
@@ -381,6 +388,31 @@ span.bollino_chiuse {
 * #nomarginmobile {
   @include media-breakpoint-down(lg) {
     margin-top: 0 !important;
-    margin-bottom: 0 !important;
+    margin-bottom: $spacer !important;
+  }
+}
+
+.cards-text {
+  p {
+    color: $color-black !important;
+    @extend %small;
+    margin-bottom: 0px;
+
+    a {
+      color: $color-theme !important;
+
+      &:hover {
+        color: $color-hover !important;
+      }
+    }
+  }
+}
+
+* .page-title {
+  @include media-breakpoint-down(sm) {
+    h2 {
+      text-align: center !important;
+      font-size: 250% !important;
+    }
   }
 }

@@ -553,7 +553,8 @@ hr {
                         padding: 0 $spacer-sm * 2;
                     }
 
-                    .cards-title p {
+                    .cards-title p,
+                    .page-title p {
                         color: $color-white;
                         font-family: "extrabold", Helvetica, Arial, sans-serif;
                         @extend %small;
@@ -578,21 +579,6 @@ hr {
     }
 }
 
-.cards-text {
-    p {
-        color: $color-black;
-        @extend %small;
-        margin-bottom: 0px;
-
-        a {
-            color: $color-theme !important;
-
-            &:hover {
-                color: $color-hover !important;
-            }
-        }
-    }
-}
 
 /* BLOCK image and text */
 .block-image-text {

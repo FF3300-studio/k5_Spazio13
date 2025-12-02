@@ -3,8 +3,7 @@
 <?php snippet('menu') ?>
 
 <?php snippet('check_banner',['posizione' => 'sopra',]); ?>
-
-<!-- ?php snippet('page_navigator') ? -->
+<?php snippet('page_navigator') ?>
 
 <?php snippet('layouts', ['layout_content' => $page->contenuto(),]); ?>
 

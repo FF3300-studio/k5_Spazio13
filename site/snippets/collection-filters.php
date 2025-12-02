@@ -21,11 +21,23 @@ if ($allCategories->isNotEmpty() && $collection->isNotEmpty()): ?>
                                 $slug = Str::slug($category->nome());
                                 $newActive = $activeCategories;
 
-                                // Toggle logica: aggiungi o rimuovi categoria
-                                if (in_array($slug, $activeCategories)) {
-                                    $newActive = array_diff($activeCategories, [$slug]);
+                                // Toggle logica
+                                if ($filterLogic === 'or') {
+                                    // Logica OR: Single Select (mutually exclusive)
+                                    if (in_array($slug, $activeCategories)) {
+                                        // Se è già attivo, lo disattivo (nessuna categoria selezionata)
+                                        $newActive = [];
+                                    } else {
+                                        // Se non è attivo, diventa l'unico attivo
+                                        $newActive = [$slug];
+                                    }
                                 } else {
-                                    $newActive[] = $slug;
+                                    // Logica AND (o default): Multi Select (accumulative)
+                                    if (in_array($slug, $activeCategories)) {
+                                        $newActive = array_diff($activeCategories, [$slug]);
+                                    } else {
+                                        $newActive[] = $slug;
+                                    }
                                 }
 
                                 $newParam = implode('+', $newActive);

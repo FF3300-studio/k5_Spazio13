@@ -3,7 +3,7 @@
 $formData = $formData($page);
 ?>
 <?php if(isset($layout_content) AND $layout_content->isNotEmpty()): ?>
-    <div class="blocks-container <?php if(isset($class)): ?><?= $class ?><?php endif; ?>">
+    <div class="blocks-container <?php if($page->parent() !== NULL): ?>article<?php endif; ?> <?php if(isset($class)): ?><?= $class ?><?php endif; ?>">
         <?php $index = 1; ?>
         <?php foreach ($layout_content->toLayouts() as $layout): ?>
                 <?php $anchorEnabled = $layout->anchor()->isTrue(); ?>

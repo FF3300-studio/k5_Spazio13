@@ -1,12 +1,12 @@
 <!-- FILTRI -->
 <?php snippet('collection-filters',[
-      'logic' => 'and' // oppure 'or'
+      'logic' => 'or' // oppure 'or'
 ]); ?>
 <!-- GRIGLIA -->
 <?php snippet('collection-grid',[
     'collection' => $collection,
     'category_color' => false,
-    'padding_top' => '50%',
+    // 'padding_top' => '50%',
 ]) ?>
 
 

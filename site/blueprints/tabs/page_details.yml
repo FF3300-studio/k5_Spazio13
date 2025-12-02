@@ -26,8 +26,8 @@ fields:
     width: 1/2
     max: 1
 
-  date:
-    extends: fields/date
+  data_di_pubblicazione:
+    type: date
     label: Data di pubblicazione del contenuto
     width: 1/2  
     default: now

@@ -6,25 +6,18 @@
 /* CSS relativo al navigatore di pagina */
 .breadcrumbs {
   width: 100%;
-  padding: $spacer $spacer * 3;
-  background-color: $color-white;
-  border-top: 2px solid $color-black;
-  border-bottom: 2px solid $color-black;
+  padding: 5px $spacer;
+  background-color: none;
   @extend %micro;
 
-  @include media-breakpoint-up(xl) {
-    padding: $spacer-xl $spacer-xl * 3;
-  }
-
-  @include media-breakpoint-down(sm) {
-    padding: $spacer-sm $spacer-sm * 3;
-  }
 
   ul {
     display: flex;
     flex-wrap: wrap;
+    list-style-type: none;
     padding: 0;
     margin: 0;
+    justify-content: center;
 
     li {
       padding: 0;

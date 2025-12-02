@@ -1,6 +1,6 @@
 <!-- FILTRI -->
 <?php snippet('collection-filters',[
-      'logic' => 'and' // oppure 'or'
+      'logic' => 'or' // oppure 'or'
 ]); ?>
 <!-- GRIGLIA -->
 <?php snippet('collection-divided-grid',[

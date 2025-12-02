@@ -112,3 +112,15 @@
         }
     }
 }
+
+* .article {
+    padding: $spacer;
+    width: calc(100% - $spacer * 2);
+    margin: 0 auto;
+}
+
+* .page-informations {
+    @include media-breakpoint-down(sm) {
+        margin-bottom: $spacer-sm;
+    }
+}

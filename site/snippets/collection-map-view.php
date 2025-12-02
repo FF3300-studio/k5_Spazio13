@@ -1,6 +1,6 @@
 <!-- FILTRI -->
 <?php snippet('collection-filters',[
-      'logic' => 'and' // oppure 'or'
+      'logic' => 'or' // oppure 'or'
 ]); ?>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
