@@ -9,6 +9,7 @@
 
 .cards-title h2 {
   font-variation-settings: 'wght' 1000, 'opsz' 100, 'wdth' 120, 'GRAD' -0.5, 'slnt' 0, 'XTRA' 468.6, 'XOPQ' 96.56, 'YOPQ' 78.9, 'YTLC' 514.56, 'YTUC' 711.28, 'YTAS' 749.45, 'YTDE' -203.57, 'YTFI' 737.84 !important;
+  margin-top: 10px;
 }
 
 .card-master {
@@ -149,8 +150,8 @@ span.tag {
   min-width: 0;
   flex-grow: 0;
   margin: 0;
-  margin-right: $spacer;
-  margin-bottom: $spacer;
+  margin-right: 5px;
+  margin-bottom: 5px;
   border-radius: 0;
   padding: 0px 8px;
   background-color: $color-white;

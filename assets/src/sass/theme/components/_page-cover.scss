@@ -30,7 +30,7 @@
 }
 
 * .column.col-lg-12 {
-  margin: 30px auto;
+  margin: 0px auto;
   max-width: 1080px;
   box-sizing: border-box;
   padding: $spacer;
@@ -38,6 +38,7 @@
 
   @include media-breakpoint-down(sm) {
     margin: 0px auto;
+    width: 100%;
   }
 }
 

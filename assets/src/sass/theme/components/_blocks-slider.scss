@@ -64,6 +64,7 @@ hr {
 
         img {
             margin-bottom: math.div($spacer, 3);
+            width: 100%;
 
             @include media-breakpoint-up(xl) {
                 margin-bottom: math.div($spacer-xl, 3);

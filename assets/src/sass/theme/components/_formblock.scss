@@ -9,14 +9,12 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: $spacer * 3 0;
-    margin-bottom: 0 !important;
+    margin: 0 !important;
     background-color: $color-theme;
 
     @include media-breakpoint-up(xl) {
         padding: $spacer-xl*3 !important;
-        margin: $spacer-xl * 3 0;
-        margin-bottom: 0 !important;
+        margin: 0 !important;
     }
 
     @include media-breakpoint-down(sm) {

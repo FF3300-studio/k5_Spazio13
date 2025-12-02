@@ -178,8 +178,8 @@
       features.forEach(f => {
         const el = document.createElement('div');
         el.className = 'marker-html';
-        el.style.width = '36px';
-        el.style.height = '36px';
+        el.style.width = '25px';
+        el.style.height = '25px';
         el.style.backgroundImage = `url('${iconUrl}')`;
         el.style.backgroundRepeat = 'no-repeat';
         el.style.backgroundPosition = 'center';
