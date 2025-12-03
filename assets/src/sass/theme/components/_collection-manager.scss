@@ -42,13 +42,14 @@
 }
 
 .cm-chip {
-  display: inline-block;
-  padding: 6px 10px;
-  font-weight: 900;
-  background-color: gray;
-  color: lightgray;
+  @extend %small;
+  border-radius: 100vw;
+  padding: 4px 12px;
+  font-weight: 700;
+  background-color: $color-white;
+  color: $color-hover;
   margin-left: 15px;
-  border: 2px solid gray;
+  border: 2px solid $color-hover;
 }
 
 /* Card condivisa (griglia + carosello) */
