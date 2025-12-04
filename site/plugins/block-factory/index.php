@@ -1,6 +1,7 @@
 <?php
 Kirby::plugin('cookbook/block-factory', [
   'blueprints' => [
+    'blocks/variable_title'                => __DIR__ . '/blueprints/blocks/variable_title.yml',
     'blocks/map'                => __DIR__ . '/blueprints/blocks/map.yml',
     'blocks/imagetext'          => __DIR__ . '/blueprints/blocks/imagetext.yml',
     'blocks/imagetextbuttons'   => __DIR__ . '/blueprints/blocks/imagetextbuttons.yml',
@@ -12,6 +13,7 @@ Kirby::plugin('cookbook/block-factory', [
     'blocks/accordion'          => __DIR__ . '/blueprints/blocks/accordion.yml',
   ],
   'snippets' => [
+    'blocks/variable_title'                => __DIR__ . '/snippets/blocks/variable_title.php',
     'blocks/map'                => __DIR__ . '/snippets/blocks/map.php',
     'blocks/imagetext'          => __DIR__ . '/snippets/blocks/imagetext.php',
     'blocks/slider'             => __DIR__ . '/snippets/blocks/slider.php',

@@ -154,9 +154,6 @@ h2 {
     font-variation-settings: "wght"$font-black;
   }
 
-  @include media-breakpoint-down(sm) {
-    text-align: left !important;
-  }
 }
 
 h3 {

@@ -75,8 +75,7 @@
         text-transform: uppercase;
         @extend %extrasmall;
         width: calc(100% - $spacer*2);
-        margin: 0;
-        margin-bottom: $spacer;
+        margin: $spacer/2 0;
     }
 
     input,
@@ -159,7 +158,6 @@
 
 .formblock__message--error {
     min-width: 100%;
-    background-color: lightgray;
     margin-top: $spacer;
     margin-bottom: $spacer;
 }
@@ -174,8 +172,6 @@
 
     &:hover {
         background-color: $color-hover;
-
-        a {}
     }
 }
 
@@ -226,7 +222,9 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
-    color: $color-theme-bis !important;
+    color: $color-hover !important;
+    margin: math.div($spacer, 2) 0 !important;
+    border-top: none !important
 }
 
 * .formblock__option__container {
@@ -246,7 +244,11 @@
         transform: scale(1.25);
         margin-right: math.div($spacer, 2) !important;
         margin-left: math.div($spacer, 3) !important;
-        margin-top: math.div($spacer, 2) !important;
+        margin-top: math.div($spacer, 5.5) !important;
+
+        @include media-breakpoint-down(sm) {
+            margin-top: math.div($spacer, 2.5) !important;
+        }
     }
 }
 
@@ -277,5 +279,20 @@
 
     a {
         color: $color-white;
+    }
+}
+
+.formblock__message--success {
+    width: 100%;
+
+    .formblock__message__text {
+        width: 100%;
+
+        p {
+            margin: 0 !important;
+            text-align: center;
+            width: 100% !important;
+            color: $color-white !important;
+        }
     }
 }

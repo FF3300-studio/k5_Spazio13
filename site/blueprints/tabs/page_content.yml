@@ -34,6 +34,7 @@ fields:
         type: group
         fieldsets:
           - heading
+          - variable_title
           - text
           - cta
           - markdown
@@ -48,11 +49,8 @@ fields:
           - video
           - localvideo
           - slider
-          - imagetextbuttons
-          - grid
           - collection_manager
           - map
-          - people
       utility:
         label: Utility
         type: group

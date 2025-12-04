@@ -1,0 +1,42 @@
+name: Variable Title
+icon: star
+preview: fields
+wysiwyg: true
+
+fields:
+  level:
+    label: Livello
+    type: radio
+    columns: 6
+    options:
+      h1:
+        icon: h1
+        text: H1
+      h2:
+        icon: h2
+        text: H2
+      h3:
+        icon: h3
+        text: H3
+      h4:
+        icon: h4
+        text: H4
+      h5:
+        icon: h5
+        text: H5
+      h6:
+        icon: h6
+        text: H6
+  text:
+    label: Contenuto
+    type: writer
+  paramentri:
+    type: structure
+    label: Parametri variabili
+    fields:
+      asse:
+        label: Asse
+        type: text
+      valore:
+        label: Valore
+        type: text
