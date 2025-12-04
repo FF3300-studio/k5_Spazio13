@@ -1,0 +1,21 @@
+name: Page Title
+icon: document
+preview: fields
+wysiwyg: true
+
+fields:
+  text:
+    label: Contenuto
+    type: text
+    size: medium
+    width: 3/4
+  alignment:
+    label: Allineamento
+    type: select
+    default: center
+    width: 1/4
+    options:
+      left: Sinistra
+      center: Centro
+      right: Destra
+      

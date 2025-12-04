@@ -35,6 +35,7 @@ fields:
         fieldsets:
           - heading
           - variable_title
+          - page_title
           - text
           - cta
           - markdown

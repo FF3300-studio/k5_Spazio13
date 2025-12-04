@@ -33,7 +33,7 @@
                                 id="mce-group[5913]-5913-0">
                     
                         <label for="mce-group[5913]-5913-0">
-                            Confermo di aver letto e accettato la <a href="<?= $site->url() ?>/privacy-policy" target="_blank" style="text-decoration: underline" title="informativa privacy">privacy policy</a> 
+                        dichiaro di aver preso visione della <a href="<?= $site->url() ?>/privacy-policy" target="_blank" style="text-decoration: underline" title="informativa privacy">privacy policy</a> e acconsento al trattamento dei dati.
                         </label>
                     </div>
                 </div>

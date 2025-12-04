@@ -39,6 +39,14 @@ form.sedi {
         font-variation-settings: 'wght' 666;
         border: 2px solid $color-theme;
         outline: none;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        border-radius: 100vw;
+        padding: 6px 12px;
+
+        &:hover {
+            cursor: pointer;
+        }
 
         &:focus {
             outline: 2px solid $color-hover;

@@ -210,8 +210,19 @@
         margin-left: 4px !important;
         font-size: $small !important;
         text-transform: lowercase !important;
+        color: $color-white !important;
+
+        a {
+            color: $color-hover !important;
+
+            &:hover {
+                color: $color-white !important;
+                text-decoration: underline !important;
+            }
+        }
     }
 }
+
 
 * .formblock__message__list {
     margin: $spacer 0 !important;

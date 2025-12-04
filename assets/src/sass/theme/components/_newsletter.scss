@@ -186,3 +186,15 @@ h2.description {
   align-items: flex-start;
   justify-content: center;
 }
+
+
+#newsletter * {
+  a {
+    color: $color-hover !important;
+
+    &:hover {
+      color: $color-white !important;
+      text-decoration: underline !important;
+    }
+  }
+}
