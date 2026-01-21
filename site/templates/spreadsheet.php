@@ -190,7 +190,7 @@ function build_url($base, $merge = []) {
       <div class="cm-carousel__track" tabindex="0">
         <?php foreach ($groupedItems as $dateHeader => $group): ?>
           <div class="date-group cm-card--slide" style="text-align: center; min-width: 400px; scroll-snap-align: start;">
-            <h3 class="date-header" style="font-family: 'black'; font-size: 2.22rem; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 20px; margin: 15px;">
+            <h3 class="date-header" style="font-weight: 700; font-size: 2.22rem; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 20px; margin: 15px;">
               <?= esc($dateHeader) ?>
             </h3>
             <div class="block-grid-a-list" style="justify-content: center; display: flex; flex-direction: column; gap: 15px; padding: 15px;">

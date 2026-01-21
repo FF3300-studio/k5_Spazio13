@@ -13,25 +13,11 @@
     <meta name="facebook-domain-verification" content="<?= htmlspecialchars($site->fb_domain_verification()) ?>" />
   <?php endif; ?>
 
-  <script type="application/ld+json">
-  {
-    "@type": "Organization",
-    "legalName": "<?= $site->title() ?>",
-    "alternateName": "<?= $site->alt_name() ?>",
-    "url": "<?= $site->url() ?>",
-    "description": "<?= str_replace('#','',str_replace('"',"'",str_replace("*","",$site->descrizione()))) ?>",
-    "streetAddress": "<?= $site->address() ?>",
-    "addressLocality": "<?= $site->city() ?>",
-    "addressRegion": "<?= $site->region() ?>",
-    "addressCountry": "<?= $site->country() ?>",
-    "PostalCode": "<?= $site->cap() ?>",
-    "telephone": "<?= $site->tel() ?>",
-    "contactType": "administration"<?= $site->logo()->isNotEmpty() ? ', "logo": "' . $site->logo()->toFile()->url() . '"' : '' ?>
-  }
-  </script>
+  <?php snippet('seo-schema') ?>
 
   <?php if($page->id() === 'home'): ?>
     <title><?= $site->title() ?></title>
+    <link rel="canonical" href="<?= $page->url() ?>">
     <meta property="og:type" content="website" />
     <meta property="og:title" content="<?= $site->title() ?>" />
     <meta name="twitter:title" content="<?= $site->title() ?>" />
@@ -50,15 +36,14 @@
   <?php else: ?>
     <?php if($page->uri() == 'home'): ?>
       <title><?= $site->title() ?></title>
-      <meta property="og:type" content="article" />
-      <meta property="og:title" content="<?= $site->title() ?>" />
-      <meta name="twitter:title" content="<?= $site->title() ?>" />
+      <link rel="canonical" href="<?= $page->url() ?>">
     <?php else: ?>
-      <title><?= $site->title() ?> – <?= $page->title() ?></title>
-      <meta property="og:type" content="article" />
-      <meta property="og:title" content="<?= $site->title() ?> – <?= $page->title() ?>" />
-      <meta name="twitter:title" content="<?= $site->title() ?> – <?= $page->title() ?>" />
+      <title><?= $page->title() ?> | <?= $site->title() ?></title>
+      <link rel="canonical" href="<?= $page->url() ?>">
     <?php endif; ?>
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="<?= $page->title() ?> | <?= $site->title() ?>" />
+    <meta name="twitter:title" content="<?= $page->title() ?> | <?= $site->title() ?>" />
     <meta name="description" content="<?= $page->descrizione()->cleanText() ?>">
     <meta name="twitter:description" content="<?= $page->descrizione()->cleanText() ?>">
     <meta property="og:description" content="<?= $page->descrizione()->cleanText() ?>" />
@@ -88,9 +73,8 @@
   <?php endif; ?>
 
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-  <link rel="stylesheet" href="<?= url('node_modules/bootstrap/dist/css/bootstrap.css') ?>">
+  <link rel="stylesheet" href="<?= url('node_modules/bootstrap/dist/css/bootstrap.min.css') ?>">
   <link rel="stylesheet" href="<?= url('assets/build/css/css.css') ?>"> <!-- usa versionamento manuale -->
 
   <!-- JS in HEAD solo se necessario -->
@@ -98,7 +82,7 @@
 
   <!-- Analytics -->
   <?php if (isFeatureAllowed('analytics')): ?>
-
+    
   <?php endif; ?>
 </head>
 

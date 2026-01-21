@@ -85,7 +85,9 @@ jQuery(document).ready(function() {
             };
         }
 
-        new Swiper(sliderEl, options);
+        if (sliderEl && sliderEl.children.length > 0) {
+            new Swiper(sliderEl, options);
+        }
     });
 });
 

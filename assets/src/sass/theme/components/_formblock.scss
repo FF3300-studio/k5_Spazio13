@@ -27,7 +27,7 @@
     }
 
     div[data-form="form_error"] {
-        font-variation-settings: "wght" 700 !important;
+        font-weight: $font-bold !important;
     }
 
     div[data-form="fields_error"] {
@@ -169,7 +169,7 @@
             @extend %small;
             padding: math.div($spacer, 2) $spacer*1.5;
             text-transform: uppercase;
-            font-family: 'extrabold', Helvetica, Arial, sans-serif;
+            font-weight: $font-semibold;
             height: fit-content;
 
             @include media-breakpoint-up(xl) {
@@ -300,12 +300,12 @@
 
 * .formfield__label__text {
     font-size: $small;
-    font-variation-settings: 'wght' 700;
+    font-weight: $font-bold;
 }
 
 * .formblock .formblock__submit input {
     text-transform: capitalize !important;
-    font-variation-settings: "wght" 700 !important;
+    font-weight: $font-bold !important;
     color: $color-white !important;
 
     &:hover {
@@ -320,7 +320,7 @@
     font-size: $small !important;
     align-items: center !important;
     color: $color-white !important;
-    font-variation-settings: "wght" 700 !important;
+    font-weight: $font-bold !important;
     text-transform: lowercase !important;
 
     @include media-breakpoint-down(sm) {

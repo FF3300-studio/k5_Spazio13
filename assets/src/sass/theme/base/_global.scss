@@ -64,7 +64,7 @@ figcaption {
 
 
 body {
-  font-family: "medium", Helvetica, Arial, sans-serif;
+  font-weight: $font-regular;
   @extend %small;
   line-height: 1.2em !important;
   -webkit-font-smoothing: antialiased;

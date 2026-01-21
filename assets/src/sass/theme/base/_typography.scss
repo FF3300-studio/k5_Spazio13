@@ -2,10 +2,11 @@
 @use "../settings" as *;
 
 * {
-  font-family: "regular";
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: $font-light;
 
   & strong {
-    font-family: "black";
+    font-weight: $font-bold;
   }
 }
 
@@ -170,7 +171,7 @@ h5 {
   margin: 0;
   color: $color-black;
   margin-bottom: $spacer;
-  font-family: "medium";
+  font-weight: $font-regular;
   line-height: 1.2em;
 
   @include media-breakpoint-up(xl) {
@@ -182,7 +183,7 @@ h5 {
   }
 
   strong {
-    font-family: "black";
+    font-weight: $font-bold;
   }
 
   span {

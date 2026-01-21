@@ -301,7 +301,7 @@ hr {
 
                     h2 {
                         color: $color-white;
-                        font-family: "extrabold", Helvetica, Arial, sans-serif;
+                        font-weight: $font-semibold;
                         margin-left: 0;
                         margin-right: 0;
                         @extend %massive;
@@ -377,7 +377,7 @@ hr {
         }
 
         h1 {
-            font-family: "extrabold", Helvetica, Arial, sans-serif;
+            font-weight: $font-semibold;
             margin: 0;
             padding: 0;
             @extend %ultralarge;
@@ -558,7 +558,7 @@ hr {
                     .cards-title p,
                     .page-title p {
                         color: $color-white;
-                        font-family: "extrabold", Helvetica, Arial, sans-serif;
+                        font-weight: $font-semibold;
                         @extend %small;
                     }
 
@@ -637,7 +637,7 @@ hr {
 
         .text-column-title p {
             @extend %ultralarge;
-            font-family: "extrabold", Helvetica, Arial, sans-serif;
+            font-weight: $font-semibold;
             margin-bottom: $spacer;
 
             @include media-breakpoint-up(xl) {
@@ -743,7 +743,7 @@ hr {
         }
 
         h1 {
-            font-family: "extrabold", Helvetica, Arial, sans-serif;
+            font-weight: $font-semibold;
             margin: 0;
             padding: 0;
             @extend %ultralarge;
@@ -906,7 +906,7 @@ hr {
                 .item-title {
                     p {
                         color: $color-white;
-                        font-family: "extrabold", Helvetica, Arial, sans-serif;
+                        font-weight: $font-semibold;
                         margin-bottom: 0;
                         @extend %large;
                     }
@@ -957,7 +957,7 @@ hr {
             padding: 0;
             text-align: center;
             color: $color-white;
-            font-family: "extrabold", Helvetica, Arial, sans-serif;
+            font-weight: $font-semibold;
             @extend %ultralarge;
         }
     }
@@ -1009,7 +1009,7 @@ hr {
 
                 .item-title p {
                     color: $color-white;
-                    font-family: "extrabold", Helvetica, Arial, sans-serif;
+                    font-weight: $font-semibold;
                     @extend %large;
                 }
             }

@@ -19,6 +19,10 @@
                             <?php $cover_image = $item->pics()->toFile() ?>
                             background-image: url('<?= $cover_image->thumb(['format'  => 'webp'])->url() ?>');
                         }
+                        <?php if($counter == 1): ?>
+                        /* Preload LCP background image hint */
+                        link[rel="preload"][as="image"][href="<?= $cover_image->thumb(['format'  => 'webp'])->url() ?>"] { display: none; }
+                        <?php endif; ?>
 
                         .text{
                             top: 125px!important;
@@ -44,7 +48,8 @@
                         <?php $image = $item->thumbnail()->toFile(); ?>
                         <?php snippet('image',[
                             'image' => $image, 
-                        ]) ?>                            
+                            'isFirst' => ($counter == 1)
+                        ]) ?>      
                         </div>
                     <?php endif; ?>
                     <?php if($item->crop() !== "true"): ?>

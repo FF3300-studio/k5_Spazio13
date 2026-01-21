@@ -49,7 +49,7 @@ if (isset($occurrence) && isset($occurrence['appointment'])) {
     
     
     <div class="cards-title">
-      <h2 style="font-size: 1.5rem; margin: 0; margin-bottom: 0; font-family: 'black';"><?= esc($titolo) ?></h2>
+      <h2 style="font-size: 1.5rem; margin: 0; margin-bottom: 0; font-weight: 700;"><?= esc($titolo) ?></h2>
     </div>
 
 

@@ -1,12 +1,13 @@
 <img
-  class="lazyload"
-  data-sizes="auto"
-  data-src="<?= $image->thumb([
+  class="<?= ($isFirst ?? false) ? '' : 'lazyload' ?>"
+  <?= ($isFirst ?? false) ? 'fetchpriority="high"' : '' ?>
+  <?= ($isFirst ?? false) ? 'src' : 'data-src' ?>="<?= $image->thumb([
       'width'   => 1280,
       'format'  => 'webp',
       'quality' => 75
     ])->url() ?>"
-  data-srcset="<?= $image->srcset(
+  data-sizes="auto"
+  <?= ($isFirst ?? false) ? 'srcset' : 'data-srcset' ?>="<?= $image->srcset(
       [320, 640, 960, 1280, 1600, 1920],
       ['format' => 'webp', 'quality' => 75]
     ) ?>"

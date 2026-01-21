@@ -106,7 +106,7 @@ $fieldsOrder = array_values(array_unique($fieldsOrder));
   <div class="cards-details orange" style="padding: 40px; border-radius: 15px;">
     
     <header style="text-align: center; margin-bottom: 40px;">
-      <h1 style="font-family: 'black'; font-size: 3.2rem; margin-bottom: 10px; line-height: 1.1;">
+      <h1 style="font-weight: 700; font-size: 3.2rem; margin-bottom: 10px; line-height: 1.1;">
         <?= esc($page->titolo()->or($titleFallback)) ?>
       </h1>
       <?php if ($page->nodo()->isNotEmpty()): ?>
@@ -169,7 +169,7 @@ $fieldsOrder = array_values(array_unique($fieldsOrder));
         
         <?php if ($field && $field->isNotEmpty()): ?>
           <div class="field field--<?= esc($key) ?>" style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);">
-            <h3 class="field-name" style="margin-bottom: 10px; font-weight: bold; font-family: 'black'; font-size: 1.2rem; text-transform: uppercase;">
+            <h3 class="field-name" style="margin-bottom: 10px; font-weight: bold; font-weight: 700; font-size: 1.2rem; text-transform: uppercase;">
               <?= str_replace('_', ' ', ucfirst(esc($key))) ?>
             </h3>
             <div class="field-content" style="font-size: 1.1rem; line-height: 1.6;">

@@ -9,7 +9,7 @@
 
 .cards-title h2,
 .page-title h2 {
-  font-family: 'black' !important;
+  font-weight: $font-bold !important;
   margin-top: 10px;
 }
 
@@ -166,15 +166,13 @@ span.tag {
   background-color: $color-white;
   color: $color-theme !important;
   border: 1px solid $color-theme !important;
-  font-family: 'bold' !important;
-  font-variation-settings: 'wght' 700 !important;
+  font-weight: $font-bold !important;
   text-transform: uppercase;
   display: flex;
   align-items: center;
 
   &.parent {
-    font-family: 'bold' !important;
-    font-variation-settings: 'wght' 700 !important;
+    font-weight: $font-bold !important;
     background-color: $color-theme !important;
     color: $color-white !important;
     border-color: $color-theme !important;
@@ -329,7 +327,7 @@ span#deadline.laptop {
   top: $spacer;
   right: $spacer;
   font-size: 12px;
-  font-variation-settings: 'wght' 700;
+  font-weight: $font-bold;
   text-align: right;
   display: inline-block;
   border-radius: 100vw;

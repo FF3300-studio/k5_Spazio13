@@ -1,40 +1,22 @@
 /* Design tokens and typography configuration */
 
-$font-regular: 300;
-$font-medium: 400;
-$font-bold: 500;
-$font-extrabold: 600;
-$font-black: 700;
+$font-light: 300;
+$font-regular: 400;
+$font-medium: 500;
+$font-semibold: 600;
+$font-bold: 700;
 
 @font-face {
-  font-family: "bold";
-  src: url("@/sass/theme/fonts/spacegrotesk.ttf") format("truetype");
-  font-variation-settings: "wght"$font-bold;
-}
-
-@font-face {
-  font-family: "extrabold";
-  src: url("@/sass/theme/fonts/spacegrotesk.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "black";
-  src: url("@/sass/theme/fonts/spacegrotesk.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "medium";
-  src: url("@/sass/theme/fonts/spacegrotesk.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "regular";
-  src: url("@/sass/theme/fonts/spacegrotesk.ttf") format("truetype");
+  font-family: "Space Grotesk";
+  src: url("@/sass/theme/fonts/SpaceGrotesk.woff2") format("woff2-variations");
+  font-weight: 300 700;
+  font-display: swap;
+  font-style: normal;
 }
 
 $color-white: #fff;
 $color-black: #000;
-$color-theme: #c800ff;
+$color-theme: #a300d1;
 $color-theme-bis: #fff;
 $color-hover: #ffe000;
 $color-filter-bar: #fff;

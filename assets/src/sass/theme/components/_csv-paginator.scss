@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
     margin-top: $spacer * 3;
-    font-family: 'medium';
+    font-weight: $font-regular;
     font-size: $small;
     margin-bottom: $spacer * 3;
 
@@ -35,7 +35,7 @@
     strong {
         background-color: $color-black;
         color: $color-white;
-        font-family: 'bold';
+        font-weight: $font-bold;
     }
 
     span:not([style*="opacity"]) {
@@ -57,7 +57,7 @@
         background-color: $color-hover;
         transition: all 0.2s ease;
         border-radius: 100vw;
-        font-family: 'bold';
+        font-weight: $font-bold;
         padding-bottom: 2.5px;
 
         &:hover {

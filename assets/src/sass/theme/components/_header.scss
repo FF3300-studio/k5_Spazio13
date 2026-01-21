@@ -68,7 +68,7 @@
         display: inline-block;
         color: $color-black;
         border-radius: 0;
-        font-variation-settings: "wght" 700 !important;
+        font-weight: $font-bold !important;
 
         &.ismobile {
           color: $color-theme;
@@ -233,10 +233,9 @@
           @extend %medium;
           border-radius: 0;
           display: inline-block;
-          font-variation-settings: 'wght' 700;
+          font-weight: $font-bold;
           color: $color-black !important;
           margin: 0;
-          font-variation-settings: "wght" 700 !important;
           padding: 4px 8px;
 
           &:hover {
@@ -262,14 +261,14 @@
     width: 100%;
 
     h2 {
-      font-family: 'black';
+      font-weight: $font-bold;
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
 
       span {
         display: none;
-        font-family: 'black';
+        font-weight: $font-bold;
         margin: 0;
       }
     }

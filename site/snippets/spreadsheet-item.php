@@ -31,7 +31,7 @@ $itemUrl  = $baseSlug ? $csvSource->url() . '/' . $baseSlug : $child->url();
   <div class="cards-details orange no_hover" style="padding: <?= esc($padding) ?>; height: 100%; display: flex; flex-direction: column;">
     
     <div class="cards-title">
-      <h2 style="font-size: 1.5rem; margin: 0; margin-bottom: 5px; font-family: 'black';"><?= esc($titolo) ?></h2>
+      <h2 style="font-size: 1.5rem; margin: 0; margin-bottom: 5px; font-weight: 700;"><?= esc($titolo) ?></h2>
     </div>
 
     <div class="cards-categories" style="margin-bottom: 5px; display: flex; flex-wrap: wrap; gap: 5px; flex-direction: row;">

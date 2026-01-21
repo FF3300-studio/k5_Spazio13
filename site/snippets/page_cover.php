@@ -21,10 +21,8 @@
         </div>
       <?php elseif ($thumbnail = $page->thumbnail()->toFile()): ?>
         <div class="cover-first-element"> <!-- Apertura div cover-first-element -->
-          <img src="<?= $thumbnail->url() ?>" alt="<?= $page->title() ?>">
-          <?php $image = $thumbnail->toFile(); ?>
           <?php snippet('image',[
-              'image' => $image, 
+              'image' => $thumbnail, 
           ]) ?>
         </div> <!-- Chiusura div cover-first-element -->
       <?php endif; ?>

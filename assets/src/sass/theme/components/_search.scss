@@ -107,9 +107,9 @@
     background-color: $color-black;
     color: $color-white;
     display: inline-block;
-    font-variation-settings: 'wght' 700;
+    font-weight: $font-bold;
     text-transform: uppercase;
-    font-family: "extrabold", Helvetica, Arial, sans-serif;
+    font-weight: $font-semibold;
     padding: 6px 12px !important;
     margin: 0 $spacer-sm;
 
@@ -179,7 +179,7 @@ a.result {
   color: $color-white;
   display: inline-block;
   text-transform: uppercase;
-  font-family: "extrabold", Helvetica, Arial, sans-serif;
+  font-weight: $font-semibold;
   padding: 6px 9px !important;
   margin: 0;
 

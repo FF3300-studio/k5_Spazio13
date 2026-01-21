@@ -32,9 +32,8 @@
   width: 100%;
   text-align: center;
   color: $color-white;
-  font-family: 'black';
+  font-weight: 700;
   font-size: 52px;
-  font-variation-settings: 'wght' 900;
   margin-bottom: 45px;
 }
 
@@ -100,7 +99,7 @@ h2.description {
   border: 2px solid $color-theme !important;
   background-color: $color-white !important;
   color: $color-theme !important;
-  font-variation-settings: 'wght' 700;
+  font-weight: $font-bold;
 
   &:hover {
     background-color: $color-hover !important;
@@ -166,7 +165,7 @@ h2.description {
 .formblock_field__label {
   margin-bottom: 5px;
   color: $color-white;
-  font-variation-settings: 'wght' 800, 'CASL' 0, 'MONO' 0 !important;
+  font-weight: 700 !important;
 }
 
 #mc_embed_signup #mc-embedded-subscribe-form div.mce_inline_error {

@@ -1,1 +1,7 @@
 /content
+/site/cache
+/site/sessions
+/media
+.logins
+site/accounts/.logins
+/assets/build

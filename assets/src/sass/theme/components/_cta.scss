@@ -24,8 +24,7 @@
         white-space: nowrap;
         @extend %button;
         @extend %medium;
-        font-variation-settings: 'wght' 700;
-        font-family: "medium";
+        font-weight: $font-bold;
         color: $color-black !important;
         border: 2px solid $color-black !important;
         margin: math.div($spacer, 3) math.div($spacer, 6);

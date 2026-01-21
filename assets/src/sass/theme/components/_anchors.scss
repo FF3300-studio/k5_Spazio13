@@ -81,7 +81,7 @@
         p {
             color: $color-white;
             text-transform: uppercase;
-            font-variation-settings: 'wght' 700;
+            font-weight: $font-bold;
             margin-bottom: 0;
             @extend %extrasmall;
         }
