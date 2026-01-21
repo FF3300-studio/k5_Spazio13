@@ -24,12 +24,12 @@ if (!empty($activeCategories)) {
     <?php if($card_counter <= 2 AND $card_counter != 0): ?>
         <style>
             .single-cards {
-                margin: 15px auto!important;
+                margin: 15px 0!important;
             }
         </style>
     <?php endif; ?>
 
-    <div class="block-grid-a-list" style="justify-content: center; display: flex;">        
+    <div class="block-grid-a-list" style="justify-content: center; display: flex; gap: 15px;">        
         <?php foreach ($filtered->sortBy('data_di_pubblicazione', 'desc') as $child): ?>
             <?php snippet('card-grid', [
                 'item' => $child,

@@ -5,7 +5,7 @@
     <div class="slide-bodycopy"><?= $item->descrizione()->kirbytext() ?></div>
 <?php endif; ?>
 <?php if($item->cta()->isNotEmpty()): ?>
-    <?php snippet('cta',[
+    <?php snippet('block-slide-cta',[
         'block' => $block,
         'cta_items' => $item->cta(),
     ]) ?>

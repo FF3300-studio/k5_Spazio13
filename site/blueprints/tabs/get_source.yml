@@ -18,15 +18,29 @@ columns:
           alias:
             label: Alias
             type: text
+          role:
+            label: Ruolo
+            type: select
+            width: 1/2
+            options:
+              none: Nessuno
+              title: Titolo
+              subtitle: Sottotitolo / Nodo
+              date: Data
+              tag1: Tag 1
+              tag2: Tag 2
+              description: Descrizione / Obiettivo
           filter:
             label: Usare come filtro?
             type: toggle
+            width: 1/4
             text:
               - "No"
               - "Sì"
           colore:
             label: Colore associato al campo 
             type: color
+            width: 1/4
             when: 
               filter: true
       include_only:
@@ -36,11 +50,6 @@ columns:
         text:
           - No (tutti)
           - Sì (solo mappati)
-      page_size:
-        label: Risultati per pagina (default)
-        type: number
-        width: 1/4 
-        default: 20
       cache_ttl:
         label: Cache CSV (secondi)
         type: number

@@ -1,56 +1,23 @@
 <?php snippet('header') ?>
 <?php snippet('menu') ?>
 <?php snippet('check_banner',['posizione' => 'sopra']) ?>
-<?php snippet('page_navigator') ?>
 
-<?php snippet(name: 'csv-search')?>
+<?php snippet('page_navigator') ?>
 <?php snippet('page_cover') ?>
 <?php snippet('layouts', ['layout_content' => $page->contenuto()]) ?>
 
 <?php
 use Kirby\Toolkit\Str;
 
-// Defaults dal Panel
-$limitDefault = max(1, (int)($page->page_size()->toInt() ?: 20));
-$limit  = max(1, (int)(get('limit')  ?? $limitDefault));
-$offset = max(0, (int)(get('offset') ?? 0));
-
 $isSearch = isset($results) && $results instanceof Kirby\Cms\Pages && $results->isNotEmpty();
 
 if ($isSearch) {
   $items = $results;
-  if ($pagination = $results->pagination()) {
-    $totalRows = (int) $pagination->total();
-    $limit     = (int) $pagination->limit();
-    $current   = (int) $pagination->page();
-    $offset    = ($current - 1) * $limit;
-  } else {
-    $totalRows = (int) $results->count();
-    $current   = 1 + (int) floor($offset / $limit);
-  }
 } else {
-  $items     = $page->children();
-  $totalRows = (int) $page->totalRows();
-  $current   = 1 + (int) floor($offset / $limit);
+  $items = $page->children();
 }
 
 $filterColors = $page->filterColors();
-
-$totalPages = max(1, (int) ceil($totalRows / $limit));
-$prevOffset = max(0, $offset - $limit);
-$nextOffset = $offset + $limit;
-
-$hasPrev = $offset > 0;
-$hasNext = $current < $totalPages;
-
-$window = 2;
-$pages = [];
-for ($p = 1; $p <= $totalPages; $p++) {
-  if ($p === 1 || $p === $totalPages || ($p >= $current - $window && $p <= $current + $window)) {
-    $pages[] = $p;
-  }
-}
-$pages = array_values(array_unique($pages));
 
 $activeFilters = $_GET['filter'] ?? [];
 if (!is_array($activeFilters)) $activeFilters = [];
@@ -63,6 +30,12 @@ function build_url($base, $merge = []) {
     $qs['filter'] = $merge['filter'];
     unset($merge['filter']);
   }
+  
+  // Se stiamo settando un mese, rimuoviamo i parametri di paginazione vecchia
+  if (array_key_exists('month', $merge)) {
+      unset($qs['offset'], $qs['limit']);
+  }
+
   $qs = array_replace_recursive($qs, $merge);
 
   $filter = function (&$arr) use (&$filter) {
@@ -86,142 +59,158 @@ function build_url($base, $merge = []) {
   $filterable = $page->filterableFields();
   if (!empty($filterable)):
   ?>
-  <aside class="spreadsheet">
-    <ul class="filter-group">
-      <li>
-        <a class="tag"
-          style="border-radius:0.25vw;font-size:14px;font-family:'xanti';padding:3px 6px;margin-right:3px;border:1px solid black;background-color:black;color:white; padding-bottom: 2px!important;"
-          href="<?= $page->url() ?>" title="tutti">Tutti</a>
-      </li>
-
-      <?php foreach ($filterable as $field): ?>
-        <?php
-          $values = $page->filterValues($field);
-          if (empty($values)) continue;
-
-          $color = $filterColors[$field] ?? null;
-          $currentCsv = $activeFilters[$field] ?? '';
-          $currentArr = array_values(array_unique(array_filter(array_map('trim', explode(',', (string)$currentCsv)))));
-        ?>
-
-        <?php foreach ($values as $val): ?>
-          <?php
-            $slugVal   = Str::slug($val);
-            $slugArr   = array_map(fn($v) => Str::slug($v), $currentArr);
-            $isActive  = in_array($slugVal, $slugArr, true);
-
-            $newArr = $slugArr;
-            if ($isActive) {
-              $newArr = array_values(array_diff($newArr, [$slugVal]));
-            } else {
-              $newArr[] = $slugVal;
-            }
-
-            $newArr = array_values(array_unique(array_filter($newArr)));
-            $newFilters = $activeFilters;
-            if (empty($newArr)) {
-              unset($newFilters[$field]);
-            } else {
-              $newFilters[$field] = implode(',', $newArr);
-            }
-
-            $params = [
-              'filter' => $newFilters,
-              'offset' => 0,
-              'limit'  => $limit,
-            ];
-
-            $color_bg = lightenHex($color, 66);
-            $baseStyle = "padding-bottom:1px!important;font-size:14px;border-radius:0.25vw;border:1px solid $color_bg;color:$color;background-color:$color_bg;";
-            $activeStyle = "padding-bottom:1px!important;font-size:14px;color:black!important;background-color:#ffe000!important;border:1px solid black!important;border-radius:0.25vw;";
-            $style = $isActive ? $activeStyle : $baseStyle;
+  <div class="container-collection">
+    <div class="collection-filters" id="filters-bar">
+      <div class="container-categories">
+        
+        <fieldset id="months" class="filters-container-fieldset control-group" data-filter-group="months" 
+        style="gap: 5px; margin-bottom: 0;">
+          <?php 
+          $availableMonths = $page->availableMonths();
+          $currentMonth = get('month');
+          foreach ($availableMonths as $m): 
+              $isActive = ($currentMonth === $m['key']);
           ?>
-          <li>
-            <a class="filter-chips" style="<?= $style ?>" href="<?= build_url($page->url(), $params) ?>">
-              <?= esc($val) ?>
+            <a class="single-filter month-filter tag <?= $isActive ? 'active' : '' ?>" 
+               href="<?= build_url($page->url(), ['month' => $isActive ? null : $m['key']]) ?>"
+               style="background-color: #c800ff; color: white; border: none; padding: 5px 15px; border-radius: 20px; text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; min-height: 30px; <?= $isActive ? 'outline: 2px solid #c800ff; background-color: white; color: #c800ff;' : '' ?>">
+              <?= esc($m['label']) ?>
             </a>
-          </li>
+          <?php endforeach; ?>
+        </fieldset>
+
+        <?php if (!empty(array_filter($activeFilters)) || $currentMonth): ?>
+        <fieldset class="filters-container-fieldset control-group" data-filter-group="categories" data-logic="and">
+          <a class="all-filter single-filter control white" 
+             href="<?= $page->url() ?>" title="tutti">TUTTI</a>
+        </fieldset>
+        <?php endif; ?>
+
+        <?php foreach ($filterable as $field): ?>
+          <?php
+            $values = $page->filterValues($field);
+            if (empty($values)) continue;
+          ?>
+          <fieldset id="<?= $field ?>" class="filters-container-fieldset control-group" data-filter-group="categories" data-logic="and">
+            <?php
+              $currentCsv = $activeFilters[$field] ?? '';
+              $currentArr = array_values(array_unique(array_filter(array_map('trim', explode(',', (string)$currentCsv)))));
+            ?>
+
+            <?php foreach ($values as $val): ?>
+              <?php
+                $slugVal   = Str::slug($val);
+                $slugArr   = array_map(fn($v) => Str::slug($v), $currentArr);
+                $isActive  = in_array($slugVal, $slugArr, true);
+
+                $newArr = $slugArr;
+                if ($isActive) {
+                  $newArr = array_values(array_diff($newArr, [$slugVal]));
+                } else {
+                  $newArr[] = $slugVal;
+                }
+
+                $newArr = array_values(array_unique(array_filter($newArr)));
+                $newFilters = $activeFilters;
+                if (empty($newArr)) {
+                  unset($newFilters[$field]);
+                } else {
+                  $newFilters[$field] = implode(',', $newArr);
+                }
+
+                $params = [
+                  'filter' => $newFilters,
+                ];
+
+                $slug = Str::slug($val);
+              ?>
+              <a class="single-filter control <?= $slug ?> <?php if ($isActive): ?>active<?php endif; ?>" 
+                 href="<?= build_url($page->url(), $params) ?>">
+                <?= esc($val) ?>
+              </a>
+            <?php endforeach; ?>
+          </fieldset>
         <?php endforeach; ?>
-      <?php endforeach; ?>
-    </ul>
-  </aside>
+      </div>
+    </div>
+  </div>
   <?php endif; ?>
 
-  <?php if ($items->isEmpty()): ?>
-    <p>Nessuna voce trovata.</p>
-  <?php else: ?>
-    <ul class="spread-results">
-      <?php foreach ($items as $child): ?>
-        <li>
-          <a class="spread-result" href="<?= $child->url() ?>">
-            <div class="spread-block spread-block--uno">
-              <p class="titolo"><?= esc($child->titolo()) ?></p>
-              <?php $color = $filterColors['nodo'] ?? '#666'; ?>
-              <p class="nodo" style="color:<?= $color ?>;"><?= esc($child->nodo()) ?></p>
-            </div>
-
-            <div class="spread-block spread-block--due">
-              <?php if ($child->riguarda()->isNotEmpty()): ?>
-                <?php foreach ($child->riguarda()->split(',') as $riguarda): ?>
-                  <?php $color = $filterColors['riguarda'] ?? '#666'; $color_bg = lightenHex($color, 66); ?>
-                  <p class="bg-back" style="font-size:14px;background-color:<?= $color_bg ?>;color:<?= $color ?>;">
-                    <?= esc(trim($riguarda)) ?>
-                  </p>
-                <?php endforeach; ?>
-              <?php endif; ?>
-
-              <?php if ($child->problema()->isNotEmpty()): ?>
-                <?php foreach ($child->problema()->split(',') as $problema): ?>
-                  <?php $color = $filterColors['problema'] ?? '#666'; $color_bg = lightenHex($color, 66); ?>
-                  <p class="bg-back" style="font-size:14px;background-color:<?= $color_bg ?>;color:<?= $color ?>;">
-                    <?= esc(trim($problema)) ?>
-                  </p>
-                <?php endforeach; ?>
-              <?php endif; ?>
-            </div>
-
-            <div class="spread-block spread-block--tre">
-              <?php if ($child->obiettivo()->isNotEmpty()): ?>
-                <p class="obiettivo"><?= esc($child->obiettivo()) ?></p>
-              <?php endif; ?>
-            </div>
-          </a>
-        </li>
-      <?php endforeach ?>
-    </ul>
-
-    <?php if ($totalPages > 1): ?>
-      <nav class="pagination" aria-label="Paginazione"
-        style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
-        <?php if ($hasPrev): ?>
-          <a href="<?= build_url($page->url(), ['offset' => $prevOffset, 'limit' => $limit]) ?>">&laquo; Precedenti</a>
-        <?php else: ?><span style="opacity:.4;">&laquo; Precedenti</span><?php endif; ?>
-
-        <?php
-          $lastPrinted = 0;
-          foreach ($pages as $p) {
-            if ($lastPrinted && $p > $lastPrinted + 1) echo '<span style="opacity:.6;">…</span>';
-            $lastPrinted = $p;
-            $pOffset = ($p - 1) * $limit;
-            if ($p === $current) {
-              echo '<strong style="padding:0 .25rem;">' . $p . '</strong>';
-            } else {
-              echo '<a href="' . build_url($page->url(), ['offset' => $pOffset, 'limit' => $limit]) . '">' . $p . '</a>';
-            }
+  <?php
+  // Dynamic styles for CSV filters
+  echo "<style>";
+  // Style for "TUTTI" button
+  echo "
+  .single-filter.white:not(.active) {
+      outline: 1px solid black !important;
+      color: black !important;
+      background-color: transparent !important;
+  }
+  ";
+  foreach ($filterColors as $field => $color) {
+      $values = $page->filterValues($field);
+      foreach ($values as $val) {
+          $slug = Str::slug($val);
+          echo "
+          .single-filter.{$slug}:not(.active) {
+              outline: 1px solid {$color} !important;
+              color: {$color} !important;
+              background-color: transparent !important;
           }
-        ?>
+          .single-filter.{$slug}.active {
+              outline: 2px solid black !important;
+              color: black !important;
+              background-color: transparent !important;
+          }
+          .single-filter.{$slug}:hover {
+              outline: 2px solid black !important;
+              color: black !important;
+          }
+          ";
+      }
+  }
+  echo "</style>";
+  ?>
 
-        <?php if ($hasNext): ?>
-          <a href="<?= build_url($page->url(), ['offset' => $nextOffset, 'limit' => $limit]) ?>">Successivi &raquo;</a>
-        <?php else: ?><span style="opacity:.4;">Successivi &raquo;</span><?php endif; ?>
-      </nav>
-    <?php endif; ?>
+
+  <?php if ($items->isEmpty()): ?>
+    <p style="text-align: center; margin: 50px 0;">Nessuna voce trovata.</p>
+  <?php else: ?>
+    <?php 
+    // Group items by date
+    $groupedItems = [];
+    foreach ($items as $child) {
+        $dateStr = $page->fieldByRole($child->content()->toArray(), 'date');
+        $formattedDate = $page->formatDate($dateStr) ?: 'Altro';
+        $groupedItems[$formattedDate][] = $child;
+    }
+    ?>
+
+    <div class="cm-carousel" role="region" aria-label="<?= esc($page->title() ?: 'Calendario') ?>">
+      <div class="cm-carousel__track" tabindex="0">
+        <?php foreach ($groupedItems as $dateHeader => $group): ?>
+          <div class="date-group cm-card--slide" style="text-align: center; min-width: 400px; scroll-snap-align: start;">
+            <h3 class="date-header" style="font-family: 'black'; font-size: 2.22rem; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 20px; margin: 15px;">
+              <?= esc($dateHeader) ?>
+            </h3>
+            <div class="block-grid-a-list" style="justify-content: center; display: flex; flex-direction: column; gap: 15px; padding: 15px;">
+              <?php foreach ($group as $child): ?>
+                <div class="single-cards" style="width: 100%; min-width: 100%!important;">
+                  <?php snippet('spreadsheet-item', ['child' => $child, 'csvSource' => $page]) ?>
+                </div>
+              <?php endforeach ?>
+            </div>
+          </div>
+        <?php endforeach ?>
+      </div>
+    </div>
+
   <?php endif; ?>
 </main>
 
 <?php if($page->parent() !== null): ?>
-  <?php $parent = $page->parent()->toPage() ?>
-  <?php if ($parent && $parent->collection_toggle()->toBool()): ?>
+  <?php $parent = $page->parent() ?>
+  <?php if ($parent && method_exists($parent, 'collection_toggle') && $parent->collection_toggle()->toBool()): ?>
     <?php snippet('page_related_list') ?>
   <?php endif; ?>
 <?php endif; ?>

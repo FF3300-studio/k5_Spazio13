@@ -52,6 +52,11 @@ function resolveCategoryMarker(array $categoryNames, array $markerMap, ?string $
 
 function getLastValidDate(Page $event): ?int
 {
+    // If it's a virtual spreadsheet item, use its internal timestamp
+    if ($event->template()->name() === 'spreadsheet-item') {
+        return (int)$event->content()->get('_date_ts')->value();
+    }
+
     $appointments = $event->appuntamenti()->toStructure();
     $lastAppointment = $appointments ? $appointments->last() : null;
 
@@ -60,6 +65,63 @@ function getLastValidDate(Page $event): ?int
     }
 
     return null;
+}
+
+/**
+ * Returns an array of "occurrences" from a collection of pages.
+ * Handles both regular pages (via 'appuntamenti' structure) and spreadsheet items.
+ */
+function getOccurrences(Pages $collection): array
+{
+    $occurrences = [];
+
+    foreach ($collection as $item) {
+        if ($item->template()->name() === 'spreadsheet-item') {
+            $ts = (int)$item->content()->get('_date_ts')->value();
+            $occurrences[] = [
+                'page'      => $item,
+                'timestamp' => $ts,
+                'date_raw'  => $item->date()->value()
+            ];
+            continue;
+        }
+
+        $appointments = $item->appuntamenti()->toStructure();
+        if ($appointments->isNotEmpty()) {
+            foreach ($appointments as $app) {
+                if ($app->giorno()->isEmpty()) continue;
+                $ts = $app->giorno()->toDate();
+                $occurrences[] = [
+                    'page'      => $item,
+                    'timestamp' => $ts,
+                    'date_raw'  => $app->giorno()->value(),
+                    'appointment' => $app // store the structure entry for detailed info
+                ];
+            }
+        }
+    }
+
+    return $occurrences;
+}
+
+/**
+ * Formats a timestamp in Italian (e.g., "16 gennaio 2026")
+ */
+function formatDateItalian(?int $timestamp): string
+{
+    if (!$timestamp) return '';
+    
+    $mArr = [
+        1 => 'gennaio', 2 => 'febbraio', 3 => 'marzo', 4 => 'aprile',
+        5 => 'maggio', 6 => 'giugno', 7 => 'luglio', 8 => 'agosto',
+        9 => 'settembre', 10 => 'ottobre', 11 => 'novembre', 12 => 'dicembre'
+    ];
+    
+    $day = date('j', $timestamp);
+    $month = $mArr[(int)date('n', $timestamp)] ?? '';
+    $year = date('Y', $timestamp);
+    
+    return "$day $month $year";
 }
 
 function getFilteredCategories(Pages $collection, Structure $allCategories): Structure

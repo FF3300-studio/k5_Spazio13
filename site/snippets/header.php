@@ -9,9 +9,6 @@
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="preconnect" href="https://ajax.googleapis.com">
 
-  <!-- Preload dei font principali -->
-  <link rel="preload" href="<?= url('/assets/build/fonts/roboto-flex.ttf') ?>" as="font" type="font/ttf" crossorigin="anonymous"> 
-
   <?php if($site->fb_domain_verification()->isNotEmpty()): ?>
     <meta name="facebook-domain-verification" content="<?= htmlspecialchars($site->fb_domain_verification()) ?>" />
   <?php endif; ?>
@@ -101,16 +98,8 @@
 
   <!-- Analytics -->
   <?php if (isFeatureAllowed('analytics')): ?>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9BY4J15RYX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-9BY4J15RYX');
-    </script>
-  <?php endif; ?>
+
+    <?php endif; ?>
 </head>
-<script id="iaw-script" src="https://app.indigo.ai/widget.js?token=e4dbb0c1-a10d-4a85-957a-07615e0cbb67&v=2&trigger=on"></script> 
-<script>IndigoAIChat.setOpen(true)</script>
 
 <body>

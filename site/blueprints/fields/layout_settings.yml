@@ -32,6 +32,9 @@ fields:
   scadenza:
     label: Scade?
     type: toggle
+    width: 1/2
+    default: false
+
   #   width: 1/2
   # data_scadenza:
   #   label: Data di scadenza

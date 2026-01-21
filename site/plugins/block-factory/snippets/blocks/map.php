@@ -12,7 +12,7 @@
             $collection = $parent->children(); 
             $categories = $parent->parent_category_manager()->toStructure(); // Categorie definite nel parent
             $categoryMarkerMap = \Site\Helpers\Collection\buildCategoryMarkerMap($categories);
-            $defaultMarkerUrl = $parent->default_marker()->toFiles()->first()?->url();
+            $defaultMarkerUrl = $parent->default_marker()->toFiles()->first()?->url() ?? $site->marker()->toFiles()->first()?->url();
             ?>
 
             <?php 

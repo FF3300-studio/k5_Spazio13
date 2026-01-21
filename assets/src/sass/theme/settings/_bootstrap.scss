@@ -1,2 +1,5 @@
-@forward "bootstrap/scss/bootstrap" show media-breakpoint-up, media-breakpoint-down, media-breakpoint-between;
-@use "bootstrap/scss/bootstrap" as *;
+@use "tokens" as t;
+
+@use "bootstrap/scss/bootstrap" with ($grid-breakpoints: t.$grid-breakpoints);
+
+@forward "bootstrap/scss/bootstrap" show media-breakpoint-up, media-breakpoint-down, media-breakpoint-between, breakpoint-infix;

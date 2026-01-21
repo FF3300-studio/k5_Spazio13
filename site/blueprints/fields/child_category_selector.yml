@@ -2,7 +2,6 @@ label: Selettore delle Categorie
 help: Associa una o più categorie a questa pagina
 type: multiselect
 width: 1/2
-max: 3
 options:
   type: query
   query: page.categoriesOptions

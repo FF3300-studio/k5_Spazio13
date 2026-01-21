@@ -24,7 +24,7 @@ if (!empty($activeCategories)) {
     <?php if($card_counter <= 2 AND $card_counter != 0): ?>
         <style>
             .single-cards {
-                margin: 15px auto!important;
+                margin: 15px 0!important;
             }
         </style>
     <?php endif; ?>

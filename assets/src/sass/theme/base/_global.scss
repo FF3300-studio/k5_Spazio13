@@ -38,10 +38,10 @@ iframe {
   border: none;
 }
 
-figure {
+* figure {
   @include media-breakpoint-down(lg) {
     text-align: center;
-    margin-bottom: 15px !important;
+    margin-bottom: 0 !important;
   }
 }
 
@@ -92,5 +92,18 @@ body {
     width: 100% !important;
     min-width: fit-content !important;
     max-width: unset !important;
+  }
+}
+
+// Fix for missing standard property 'appearance'
+.form-select {
+  appearance: none;
+}
+
+@media (min-width: 1200px) {
+
+  .blocks figure,
+  .blocks .block-app-inner .image {
+    margin: 0 0 0 !important
   }
 }

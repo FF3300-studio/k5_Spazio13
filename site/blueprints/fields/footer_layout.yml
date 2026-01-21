@@ -31,8 +31,8 @@ fields:
         type: group
         fieldsets:
           - heading
-          - variable_title
-          - page_title
+          # - variable_title
+          # - page_title
           - text
           - cta
           - markdown
@@ -49,6 +49,7 @@ fields:
           - imagetextbuttons
           - grid
           - collection_manager
+          - csv_calendar
           - map
       utility:
         label: Utility

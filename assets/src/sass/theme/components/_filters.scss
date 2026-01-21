@@ -9,15 +9,15 @@
   top: 120px !important;
 
   @include media-breakpoint-up(md) {
-    top: 80px !important;
+    top: 73px !important;
   }
 
   @include media-breakpoint-down(md) {
-    top: 74px !important;
+    top: 56px !important;
   }
 
   @include media-breakpoint-up(lg) {
-    top: 130px !important;
+    top: 73px !important;
   }
 
   .collection-filters {
@@ -51,7 +51,7 @@
   text-transform: uppercase;
   width: max-content;
   transition: all 0.3s;
-  font-weight: 700;
+  font-variation-settings: 'wght' 700 !important;
   font-size: 14px;
 
   &:hover {
@@ -91,11 +91,15 @@
   /* Firefox */
   scroll-behavior: smooth;
   // padding-left: $spacer;
-  border-top: 2px solid $color-black;
+  margin-bottom: 0;
+  border-top: 1px solid whitesmoke;
 
   &:first-of-type {
     border-top: none;
+    margin-top: 0;
   }
+
+  &:last-of-type {}
 
   @include media-breakpoint-down(sm) {
     justify-content: flex-start;

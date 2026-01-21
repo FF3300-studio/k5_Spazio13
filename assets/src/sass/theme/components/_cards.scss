@@ -9,7 +9,7 @@
 
 .cards-title h2,
 .page-title h2 {
-  font-variation-settings: 'wght' 1000, 'opsz' 100, 'wdth' 120, 'GRAD' -0.5, 'slnt' 0, 'XTRA' 468.6, 'XOPQ' 96.56, 'YOPQ' 78.9, 'YTLC' 514.56, 'YTUC' 711.28, 'YTAS' 749.45, 'YTDE' -203.57, 'YTFI' 737.84 !important;
+  font-family: 'black' !important;
   margin-top: 10px;
 }
 
@@ -37,7 +37,13 @@
   &:hover {
     text-decoration: none;
     background-color: $color-hover;
+
+    &.no_hover {
+      background: none !important;
+      background-color: none !important;
+    }
   }
+
 
   .cards-title,
   .page-title {
@@ -71,8 +77,8 @@
       width: auto;
       height: 100%;
       min-width: 100%;
-      object-fit: contain !important;
-      object-position: top !important;
+      object-fit: cover !important;
+      object-position: center !important;
       background-color: $color-theme-bis;
     }
   }
@@ -158,15 +164,26 @@ span.tag {
   border-radius: 0;
   padding: 0px 8px;
   background-color: $color-white;
-  color: $color-black !important;
-  border: 1px solid $color-black !important;
-  font-weight: 700;
+  color: $color-theme !important;
+  border: 1px solid $color-theme !important;
+  font-family: 'bold' !important;
+  font-variation-settings: 'wght' 700 !important;
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
 
   &.parent {
+    font-family: 'bold' !important;
+    font-variation-settings: 'wght' 700 !important;
     background-color: $color-theme !important;
     color: $color-white !important;
     border-color: $color-theme !important;
+  }
+
+  &.alt {
+    background-color: $color-theme;
+    color: $color-white !important;
+    border: 1px solid $color-theme !important;
   }
 }
 
@@ -202,31 +219,18 @@ a.related span {
 // =========================
 .single-cards {
   padding: 0;
-  margin: 0 $spacer;
-  min-width: calc(20% - $spacer*2);
-  max-width: calc(50% - $spacer*2);
+  margin: 0;
+  width: 32%;
   flex-grow: 0;
-  margin-bottom: $spacer * 2;
-
-  @include media-breakpoint-up(xl) {
-    margin: 0 $spacer-xl;
-    margin-bottom: $spacer-xl * 2;
-    min-width: calc(20% - $spacer-sm*2);
-    max-width: calc(32% - $spacer-sm*2);
-  }
+  margin-top: 0 !important;
 
   @include media-breakpoint-down(md) {
-    margin: 0 $spacer-sm;
-    margin-bottom: $spacer-sm * 2;
+    width: 49%;
   }
 
   @include media-breakpoint-down(sm) {
-    min-width: unset !important;
-    max-width: unset !important;
-    width: calc(100% - $spacer-sm*2) !important;
+    width: 100% !important;
     flex-grow: 1;
-    margin: 0 $spacer-sm;
-    margin-bottom: $spacer-sm * 2;
   }
 }
 
@@ -238,12 +242,14 @@ a.related span {
     }
 
     * span.tag {
-      color: $color-theme !important;
+      color: $color-theme;
     }
 
     * span.parent {
       color: $color-white !important;
     }
+
+
   }
 
   text-align: left;
@@ -271,7 +277,7 @@ a.related span {
     }
 
     * span.tag {
-      color: $color-theme !important;
+      color: $color-theme ;
     }
 
     * span.parent {
@@ -298,6 +304,10 @@ a.related span {
   .location {
     margin-top: $spacer;
   }
+
+  .cards-categories {
+    justify-content: center;
+  }
 }
 
 #deadline {
@@ -319,7 +329,7 @@ span#deadline.laptop {
   top: $spacer;
   right: $spacer;
   font-size: 12px;
-  font-weight: 700;
+  font-variation-settings: 'wght' 700;
   text-align: right;
   display: inline-block;
   border-radius: 100vw;
@@ -412,4 +422,8 @@ span.bollino_chiuse {
       font-size: 250% !important;
     }
   }
+}
+
+* .csv {
+  background-color: $color-hover !important;
 }

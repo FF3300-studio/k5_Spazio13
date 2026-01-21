@@ -22,10 +22,10 @@
 }
 
 .formfield__container[data-type=hidden] {
-    visibility:hidden;
+    visibility: hidden;
     position: absolute;
     width: 0;
-    height:0;
+    height: 0;
 }
 
 /* Label */
@@ -33,7 +33,7 @@
 .formblock_field__label {
     display: block;
     margin-bottom: 10px;
-    font-weight: 700;
+    font-variation-settings: 'wght' 700;
 }
 
 
@@ -91,11 +91,11 @@
     outline: none;
     font-size: .9em;
     font-weight: 500;
-    appearance: unset!important;
-    -moz-appearance: unset!important;
-    -webkit-appearance: unset!important;
-    -o-appearance: unset!important;
-    -ms-appearance: unset!important;
+    appearance: unset !important;
+    -moz-appearance: unset !important;
+    -webkit-appearance: unset !important;
+    -o-appearance: unset !important;
+    -ms-appearance: unset !important;
 }
 
 .formfield__container[data-valid="false"] .formfield__input,
@@ -127,11 +127,11 @@
 .formfield__input::-webkit-outer-spin-button,
 .formfield__input::-webkit-inner-spin-button {
     margin: 0;
-    appearance: none!important;
-    -moz-appearance: none!important;
-    -webkit-appearance: none!important;
-    -o-appearance: none!important;
-    -ms-appearance: none!important;
+    appearance: none !important;
+    -moz-appearance: none !important;
+    -webkit-appearance: none !important;
+    -o-appearance: none !important;
+    -ms-appearance: none !important;
 }
 
 .formfield__input:focus,
@@ -139,11 +139,11 @@
 .formfield__textarea:focus {
     border: 1px solid var(--formblock-color);
     outline: none;
-    box-shadow: none!important;
-    -moz-box-shadow: none!important;
-    -webkit-box-shadow: none!important;
-    -o-box-shadow: none!important;
-    -ms-box-shadow: none!important;
+    box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -o-box-shadow: none !important;
+    -ms-box-shadow: none !important;
 }
 
 
@@ -155,9 +155,9 @@
     -webkit-box-shadow: 0 0 0 30px transparent inset;
     -o-box-shadow: 0 0 0 30px transparent inset;
     -ms-box-shadow: 0 0 0 30px transparent inset;
-    -moz-appearance: textfield!important;
-    appearance: none!important;
-    -webkit-appearance: none!important;
+    -moz-appearance: textfield !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
 }
 
 .formfield__textarea {
@@ -177,19 +177,19 @@
 }
 
 .formfield__checkbox {
-    appearance: checkbox!important;
-    -moz-appearance: checkbox!important;
-    -webkit-appearance: checkbox!important;
-    -o-appearance: checkbox!important;
-    -ms-appearance: checkbox!important
+    appearance: checkbox !important;
+    -moz-appearance: checkbox !important;
+    -webkit-appearance: checkbox !important;
+    -o-appearance: checkbox !important;
+    -ms-appearance: checkbox !important
 }
 
 .formfield__radio {
-    appearance: radio!important;
-    -moz-appearance: radio!important;
-    -webkit-appearance: radio!important;
-    -o-appearance: radio!important;
-    -ms-appearance: radio!important
+    appearance: radio !important;
+    -moz-appearance: radio !important;
+    -webkit-appearance: radio !important;
+    -o-appearance: radio !important;
+    -ms-appearance: radio !important
 }
 
 .formfield__radio,
@@ -286,11 +286,11 @@
 .formfield__select {
     position: relative;
     background: 0 0;
-    appearance: none!important;
-    -moz-appearance: none!important;
-    -webkit-appearance: none!important;
-    -o-appearance: none!important;
-    -ms-appearance: none!important;
+    appearance: none !important;
+    -moz-appearance: none !important;
+    -webkit-appearance: none !important;
+    -o-appearance: none !important;
+    -ms-appearance: none !important;
     z-index: 10;
     cursor: pointer;
 }

@@ -417,7 +417,7 @@ class Field extends KirbyBlock
                 $errors["filesize"] = $this->message('file_maxsize', ['maxsize' => ($maxsize / 1024 / 1024 )]);
 
             //Check MIME Types
-            $mime = Mime::fromMimeContentType($f['tmp_name']);
+            $mime = Mime::type($f['tmp_name'], F::extension($f['name']));
             $accept = $this->accept()->value();
 
             if(!Mime::isAccepted($mime, $accept) and $this->accept()->isNotEmpty())

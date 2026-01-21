@@ -1,4 +1,4 @@
-<div class="single-cards col-lg-4 col-sm-12 col-12">
+<div class="single-cards">
   <a
     href="<?= $item->url() ?>"
     class="card-master <?php if ($category_color): ?><?= strtolower($item->child_category_selector()) ?><?php endif ?>"

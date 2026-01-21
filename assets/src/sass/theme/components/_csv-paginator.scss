@@ -1,0 +1,85 @@
+@use "../shared" as *;
+
+.csv-paginator {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: $spacer * 3;
+    font-family: 'medium';
+    font-size: $small;
+    margin-bottom: $spacer * 3;
+
+    a,
+    span,
+    strong {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 10px;
+        text-decoration: none;
+        color: $color-black;
+        border: 1px solid $color-black;
+        transition: all 0.2s ease;
+        border-radius: 100vw;
+    }
+
+    a:hover {
+        background-color: $color-hover;
+        border-color: $color-black;
+        color: $color-black !important;
+    }
+
+    strong {
+        background-color: $color-black;
+        color: $color-white;
+        font-family: 'bold';
+    }
+
+    span:not([style*="opacity"]) {
+        border: none;
+        min-width: 20px;
+    }
+
+    // Precedenti / Successivi labels
+    .nav-label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 10px;
+        text-decoration: none;
+        color: $color-black;
+        border: none;
+        background-color: $color-hover;
+        transition: all 0.2s ease;
+        border-radius: 100vw;
+        font-family: 'bold';
+        padding-bottom: 2.5px;
+
+        &:hover {
+            background-color: $color-black;
+            border-color: $color-black;
+            color: $color-white !important;
+        }
+    }
+
+    span.disabled {
+        opacity: 0.3;
+        border: 1px solid #ccc;
+        cursor: default;
+    }
+}
+
+.wrap {
+    padding: $spacer;
+}
+
+.date-group {
+    &:nth-child(odd) {
+        background-color: #efefef;
+    }
+}

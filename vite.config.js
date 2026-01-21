@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import liveReload from 'vite-plugin-live-reload';
 import { spawn } from 'child_process';
+import path from 'path';
 
 export default defineConfig(({ command }) => {
   const isProduction = command === 'build';
@@ -18,8 +19,13 @@ export default defineConfig(({ command }) => {
   }
 
   return {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'assets/src'),
+      },
+    },
     root: 'assets/src', // Set root folder to 'src'
-    base: '/', // Base URL for development
+    base: isProduction ? '/assets/build/' : '/', // Base URL for development
     build: {
       outDir: '../build', // Compiled output folder
       emptyOutDir: false,
@@ -34,6 +40,10 @@ export default defineConfig(({ command }) => {
             if (assetInfo.name.endsWith('.css')) {
               return 'css/[name][extname]'; // Custom name for CSS files
             }
+            if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name)) {
+              return 'fonts/[name][extname]'; // Custom name for font files
+            }
+            return 'assets/[name][extname]';
           },
         },
       },

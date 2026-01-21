@@ -40,13 +40,17 @@ return function ($site, $pages, $page) {
 
   // 4) Search solo se c’è una query valida, altrimenti Pages vuota
   if ($query !== null && trim($query) !== '') {
+    // Raccogliamo TUTTI i campi (alias) possibili da tutti gli spreadsheet per rendere la search universale
+    $searchFields = ['title', 'titolo', 'name', 'nodo', 'description', 'riguarda', 'problema', 'obiettivo'];
+    foreach ($site->index()->filterBy('template', 'spreadsheet') as $sheetPage) {
+        $searchFields = array_merge($searchFields, array_values($sheetPage->buildAliases()));
+    }
+    $searchFields = array_values(array_unique(array_filter($searchFields)));
+
     $results = $merged->search($query, [
       'words'     => false,
       'minlength' => 2,
-      'fields'    => [
-        'nodo','titolo','a cosa serve','obiettivo','riguarda','tag',
-        'title','problema','descrizione','link','faq'
-      ],
+      'fields'    => $searchFields,
       'stopwords' => ['di','a','da','in','con','su','per','tra','fra','il','lo','la','gli','le']
     ]);
   } else {

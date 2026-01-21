@@ -4,23 +4,21 @@
 
 /* FORMBLOCK PLUGIN */
 .formblock {
-    padding: $spacer*3 !important;
+    padding: $spacer !important;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-between;
     margin: 0 !important;
     background-color: $color-theme;
 
     @include media-breakpoint-up(xl) {
-        padding: $spacer-xl*3 !important;
         margin: 0 !important;
     }
 
     @include media-breakpoint-down(sm) {
         flex-direction: column;
-        margin: $spacer-sm 0 !important;
-        padding: $spacer-sm * 3 !important;
+        margin: $spacer !important;
     }
 
     .formblock__message__list {
@@ -29,7 +27,7 @@
     }
 
     div[data-form="form_error"] {
-        font-weight: 700 !important;
+        font-variation-settings: "wght" 700 !important;
     }
 
     div[data-form="fields_error"] {
@@ -41,7 +39,7 @@
     .formfield__container {
         display: flex;
         flex-direction: column;
-        min-width: 32%;
+        min-width: 100%;
         max-width: 100%;
         flex-grow: 0;
 
@@ -75,7 +73,41 @@
         text-transform: uppercase;
         @extend %extrasmall;
         width: calc(100% - $spacer*2);
-        margin: $spacer/2 0;
+        margin: math.div($spacer, 2) 0;
+    }
+
+    select {
+        background-color: $color-white;
+        border: 2px solid $color-black;
+        padding: math.div($spacer, 2);
+        border-radius: 0;
+        @extend %micro;
+        width: 100% !important;
+        margin: 0 !important;
+
+        &.formfield__radio,
+        &.formfield__checkbox,
+        &.formfield__option,
+        &.formfield__select {
+            min-width: auto !important;
+        }
+
+        margin: 0 auto;
+        font-size: 120%;
+
+        @include media-breakpoint-up(xl) {
+            padding: math.div($spacer-xl, 2);
+        }
+
+        @include media-breakpoint-down(sm) {
+            padding: math.div($spacer-sm, 2);
+            margin: 0 !important;
+        }
+
+        &:focus {
+            border-color: $color-black !important;
+            outline: 2px solid $color-hover !important;
+        }
     }
 
     input,
@@ -89,7 +121,9 @@
         margin: 0 !important;
 
         &.formfield__radio,
-        &.formfield__checkbox {
+        &.formfield__checkbox,
+        &.formfield__option,
+        &.formfield__select {
             min-width: auto !important;
         }
 
@@ -176,19 +210,20 @@
 }
 
 * .formfield__radio,
-.formfield__checkbox {
-    width: fit-content !important;
+* .formfield__checkbox,
+* .formfield__option,
+* .formfield__select {
+    width: 100% !important;
     margin-top: 3px !important;
 }
 
 * .formfield__option {
-    width: fit-content !important;
-    width: fit-content !important;
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     align-items: center !important;
     margin-bottom: 4px !important;
+    color: $color-white !important;
 
     &:last-of-type {
         margin-bottom: 0 !important;
@@ -265,12 +300,12 @@
 
 * .formfield__label__text {
     font-size: $small;
-    font-weight: 700;
+    font-variation-settings: 'wght' 700;
 }
 
 * .formblock .formblock__submit input {
     text-transform: capitalize !important;
-    font-weight: 700 !important;
+    font-variation-settings: "wght" 700 !important;
     color: $color-white !important;
 
     &:hover {
@@ -282,7 +317,11 @@
     display: flex !important;
     flex-direction: row !important;
     margin: 0 !important;
+    font-size: $small !important;
     align-items: center !important;
+    color: $color-white !important;
+    font-variation-settings: "wght" 700 !important;
+    text-transform: lowercase !important;
 
     @include media-breakpoint-down(sm) {
         align-items: flex-start !important;

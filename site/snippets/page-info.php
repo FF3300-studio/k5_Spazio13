@@ -111,7 +111,7 @@
 </div>
 
 <div class="cards-text">
-    <p style="font-size: 150%"><?php echo $item->descrizione()->text(); ?></p>
+    <div style="font-size: 150%; text-align: center!important; display: flex; justify-content: center; flex-direction: column; align-items: center; min-width: 100%;"><?php echo $item->descrizione()->kirbytext(); ?></div>
 </div>
 
 <?php if ($item->team()->isNotEmpty()): ?>

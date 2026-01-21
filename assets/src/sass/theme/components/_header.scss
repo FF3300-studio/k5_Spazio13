@@ -8,7 +8,6 @@
   &.navigation-desktop {
     display: flex;
     max-height: fit-content;
-    padding: $spacer;
 
     @include media-breakpoint-down(lg) {
       padding: math.div($spacer, 2);
@@ -67,17 +66,12 @@
       .title_link {
         width: fit-content;
         display: inline-block;
-        padding: 4px 8px;
-        font-size: $medium;
-        color: $color-white;
-        background-color: $color-theme;
+        color: $color-black;
         border-radius: 0;
         font-variation-settings: "wght" 700 !important;
 
         &.ismobile {
           color: $color-theme;
-          background-color: $color-white;
-
         }
       }
     }
@@ -108,7 +102,7 @@
     display: block;
     width: 20px;
     height: 2px;
-    margin: 2px 0;
+    margin: 2px 0 !important;
     background-color: #000;
     border-radius: 100vw;
     position: relative;
@@ -118,7 +112,6 @@
       transform: rotate(45deg);
       transform-origin: 10% 10%;
       left: 3px;
-      top: 0;
     }
 
     &:nth-of-type(2) {
@@ -141,14 +134,13 @@
       &:nth-of-type(3) {
         transform: rotate(0);
         left: 0;
-        top: -2px;
       }
 
       &:nth-of-type(2) {
         opacity: 1;
         filter: alpha(opacity=100);
         left: 0;
-        top: -2px;
+
       }
     }
   }
@@ -181,12 +173,13 @@
 
     @include media-breakpoint-down(md) {
       align-items: center;
-      padding: 12px 30px;
+      padding: 15px;
     }
 
     * {
       color: $color-black;
       transition: all 0.3s;
+      margin: 0;
     }
 
     a,
@@ -206,7 +199,7 @@
 
       &:hover {
         * {
-          color: $color-hover !important;
+          color: $color-theme !important;
           transition: all 0.3s;
         }
       }
@@ -237,25 +230,56 @@
         }
 
         .title_link {
-          @extend %extrasmall;
-          @extend %button;
+          @extend %medium;
           border-radius: 0;
           display: inline-block;
-          padding: 4px 8px;
-          font-weight: 700;
-          background-color: $color-theme;
-          color: $color-white !important;
+          font-variation-settings: 'wght' 700;
+          color: $color-black !important;
           margin: 0;
-          border: 2px solid $color-theme;
+          font-variation-settings: "wght" 700 !important;
+          padding: 4px 8px;
 
           &:hover {
-            background-color: $color-white !important;
             color: $color-theme !important;
           }
 
           &.active {
             color: $color-theme !important;
           }
+        }
+      }
+    }
+  }
+}
+
+
+.logotype_container {
+  * {
+    transition: none !important;
+  }
+
+  a {
+    width: 100%;
+
+    h2 {
+      font-family: 'black';
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+
+      span {
+        display: none;
+        font-family: 'black';
+        margin: 0;
+      }
+    }
+
+    &:hover {
+      color: $color-theme !important;
+
+      h2 {
+        span {
+          display: block;
         }
       }
     }

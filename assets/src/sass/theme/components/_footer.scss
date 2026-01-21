@@ -60,7 +60,9 @@ footer {
 }
 
 // Layout footer specifico (attenzione: il selettore era fragile)
+
 .footer .row {
+  background-color: $color-black;
 
   h1,
   h2,
@@ -68,19 +70,27 @@ footer {
   h4,
   h5,
   p {
-    color: $color-black;
+    color: $color-white;
   }
 
   a {
-    color: $color-theme;
+    color: $color-white !important;
 
     &:hover {
-      color: $color-black !important;
+      color: $color-hover !important;
     }
   }
 }
 
 .footer {
+  .row {
+    margin: 0 !important;
+
+    &:first-child {
+      margin-top: 0 !important;
+    }
+  }
+
   figure {
     margin-bottom: 0 !important;
 

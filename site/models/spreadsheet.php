@@ -13,6 +13,7 @@ class SpreadsheetPage extends DefaultPage
     protected static ?array  $filtersIndexCache = null;  // alias => [values] tokenizzati per la richiesta corrente
     protected static $searchPoolCache = null;            // Pages di TUTTE le righe (senza limiti/filtri) per la search
     protected array          $filters = [];              // alias marcati come filtrabili nel Panel
+    protected array          $rolesIndex = [];           // role => alias
 
     /* ===== Utils di percorso ===== */
     protected function requestPath(): string
@@ -182,20 +183,244 @@ public function filterColors(): array
 
         $aliasMap = [];
         $filters  = [];
+        $roles    = [];
         $struct = $this->alias_map()->isNotEmpty() ? $this->alias_map()->toStructure() : [];
         foreach ($struct as $row) {
             $h = Str::slug(trim($row->header()->value() ?? ''));
             $a = Str::slug(trim($row->alias()->value() ?? ''));
+            $r = trim($row->role()->value() ?? 'none');
             if ($h !== '' && $a !== '') {
                 $aliasMap[$h] = $a;
                 if ($row->filter()->toBool()) {
                     $filters[] = $a;
                 }
+                if ($r !== 'none') {
+                    $roles[$r] = $a;
+                }
             }
         }
-        $this->filters = $filters;
+        $this->filters    = $filters;
+        $this->rolesIndex = $roles;
 
         return array_merge($baseAliases, $aliasMap);
+    }
+
+    /** Ritorna il valore di un campo in base al ruolo assegnato o dedotto */
+    public function fieldByRole(array $assoc, string $role): ?string
+    {
+        if (empty($this->rolesIndex)) {
+            $this->buildAliases();
+        }
+
+        // 1) Se c'è un alias mappato a questo ruolo
+        if (isset($this->rolesIndex[$role])) {
+            $alias = $this->rolesIndex[$role];
+            if (isset($assoc[$alias]) && trim($assoc[$alias]) !== '') {
+                return $assoc[$alias];
+            }
+        }
+
+        // 2) Fallback euristici per ruoli comuni
+        if ($role === 'title') {
+            return $assoc['titolo'] ?? $assoc['title'] ?? $assoc['name'] ?? null;
+        }
+
+        if ($role === 'date') {
+            // Cerca un campo che sembra una data se non mappato
+            foreach ($assoc as $k => $v) {
+                if ($this->isDate($v)) return $v;
+            }
+        }
+
+        if ($role === 'orario') {
+            return $assoc['orario'] ?? $assoc['ora'] ?? $assoc['time'] ?? null;
+        }
+
+        // 3) Handling for tags
+        if ($role === 'tag' || $role === 'tag1') {
+            return $assoc['tag1'] ?? $assoc['tag'] ?? null;
+        }
+        if ($role === 'tag2') {
+            return $assoc['tag2'] ?? null;
+        }
+
+        return null;
+    }
+
+    /** Ritorna tutti i campi che NON hanno un ruolo specifico assegnato */
+    public function extraFields(array $assoc): array
+    {
+        if (empty($this->rolesIndex)) {
+            $this->buildAliases();
+        }
+
+        $mappedAliases = array_values($this->rolesIndex);
+        $baseFields = ['slug', 'template', 'titolo', 'title', 'name'];
+
+        $extra = [];
+        foreach ($assoc as $k => $v) {
+            if (in_array($k, $mappedAliases)) continue;
+            if (in_array($k, $baseFields)) continue;
+            if ($k === 'base_slug') continue;
+            if (str_ends_with($k, '_all')) continue;
+            if (trim((string)$v) === '') continue;
+            
+            $extra[$k] = $v;
+        }
+        return $extra;
+    }
+
+    /** Heuristic per identificare se una stringa è una data */
+    public function isDate($val): bool
+    {
+        if (!is_string($val) || trim($val) === '') return false;
+        // Formato comune in Google Sheets/CSV: "10/10/2025" o "2025-10-10" o "10/10/2025 10.41.24"
+        return preg_match('/^\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}/', trim($val)) === 1;
+    }
+
+    /** Split a string containing multiple dates (separated by comma or newline) */
+    public function splitDates(?string $val): array
+    {
+        if (!$val || trim($val) === '') return [];
+        // Split by comma or newline, ma preserva i trattini usati per range orari (es: 17:00-19:00)
+        // Usiamo un lookahead/lookbehind se vogliamo essere furbi, ma uno split base su virgola/newline di solito basta
+        $parts = preg_split('/[,\\n]+/', $val);
+        $parts = array_map('trim', $parts);
+        return array_values(array_filter($parts, fn($v) => $v !== ''));
+    }
+
+    /** Parser robusto per date/orari (con mesi IT e formati vari) */
+    public function parseToTimestamp(?string $val, ?int $hintYear = null): int
+    {
+        if (!$val || trim($val) === '') return 0;
+
+        // 0) Pre-normalizzazione: trasforma 17_30 in 17:30
+        $clean = preg_replace('/(\d{1,2})_(\d{2})/', '$1:$2', strtolower(trim($val)));
+        $clean = preg_replace('/\s+/', ' ', $clean);
+        
+        // 1) Traduzione mesi (LUNGHI PRIMA per evitare match parziali)
+        $itMonths = [
+            'gennaio' => 'january', 'febbraio' => 'february', 'marzo' => 'march',
+            'aprile' => 'april', 'maggio' => 'may', 'giugno' => 'june',
+            'luglio' => 'july', 'agosto' => 'august', 'settembre' => 'september',
+            'ottobre' => 'october', 'novembre' => 'november', 'dicembre' => 'december',
+            'gen' => 'jan', 'feb' => 'feb', 'mar' => 'mar', 'apr' => 'apr',
+            'mag' => 'may', 'giu' => 'jun', 'lug' => 'jul', 'ago' => 'aug',
+            'set' => 'sep', 'ott' => 'oct', 'nov' => 'nov', 'dic' => 'dec'
+        ];
+        foreach ($itMonths as $it => $en) {
+            $clean = str_replace($it, $en, $clean);
+        }
+
+        // 2) Normalizzazione Separatori per Data e Ora
+        // Se c'è un separatore " - " o " – ", proviamo a isolare la data
+        $parts = preg_split('/\s*[-–—]\s*/', $clean);
+        $dateStr = $parts[0];
+        $timeStr = isset($parts[1]) ? $parts[1] : '';
+
+        $dateParts = explode(' ', $dateStr);
+        $normalizedDateParts = [];
+        $hasYear = false;
+        foreach ($dateParts as $p) {
+            $sub = explode('.', $p);
+            if (count($sub) >= 2) {
+                $last = end($sub);
+                if (strlen($last) === 4) {
+                    $hasYear = true;
+                    $normalizedDateParts[] = str_replace('.', '-', $p);
+                } else {
+                    $normalizedDateParts[] = str_replace('.', ':', $p);
+                }
+            } else {
+                $pNorm = str_replace('/', '-', $p);
+                if (preg_match('/-\d{4}$/', $pNorm)) $hasYear = true;
+                $normalizedDateParts[] = $pNorm;
+            }
+        }
+        $dateStr = implode(' ', $normalizedDateParts);
+
+        // Se non abbiamo l'anno ma abbiamo un suggerimento, aggiungiamolo
+        if (!$hasYear && $hintYear !== null && !preg_match('/\b\d{4}\b/', $dateStr)) {
+            if (preg_match('/^\d{1,2}-\d{1,2}$/', $dateStr)) {
+                $dateStr .= '-' . $hintYear;
+            } elseif (preg_match('/^\d{1,2}\s+[a-z]+$/', $dateStr)) {
+                $dateStr .= ' ' . $hintYear;
+            }
+        }
+
+        // Proviamo a ricomporre con l'orario se presente
+        $fullStr = $dateStr . ($timeStr ? ' ' . $timeStr : '');
+        $ts = strtotime($fullStr);
+
+        if ($ts === false) {
+            // Fallback solo data
+            $ts = strtotime($dateStr);
+        }
+
+        if ($ts === false) {
+            // Caso DD-MM senza anno
+            $partsArr = explode('-', $dateStr);
+            if (count($partsArr) === 2 && is_numeric($partsArr[0]) && is_numeric($partsArr[1])) {
+                $dateStr .= '-' . ($hintYear ?? date('Y'));
+                $ts = strtotime($dateStr);
+            }
+        }
+
+        return $ts !== false ? $ts : 0;
+    }
+
+    /** Formatta una stringa data in modo leggibile (es: 17 OTTOBRE) */
+    public function formatDate(?string $val, ?int $hintYear = null): string
+    {
+        $timestamp = $this->parseToTimestamp($val, $hintYear);
+        if ($timestamp === 0) {
+            return (string)$val;
+        }
+        
+        $day = date('j', $timestamp);
+        $monthNum = (int)date('n', $timestamp);
+        
+        $months = [
+            1 => 'gennaio', 2 => 'febbraio', 3 => 'marzo', 4 => 'aprile',
+            5 => 'maggio', 6 => 'giugno', 7 => 'luglio', 8 => 'agosto',
+            9 => 'settembre', 10 => 'ottobre', 11 => 'novembre', 12 => 'dicembre'
+        ];
+        
+        $monthName = $months[$monthNum] ?? '';
+        
+        return $day . ' ' . $monthName;
+    }
+
+    /** Formatta l'orario se presente */
+    public function formatTime(?string $val): string
+    {
+        if (!$val || trim($val) === '') return '';
+        
+        // 1) Normalizza orari: trasforma 17_30 in 17:30
+        $clean = preg_replace('/(\d{1,2})_(\d{2})/', '$1:$2', strtolower(trim($val)));
+
+        // 2) Se c'è un separatore " - " o " – ", l'orario è dopo
+        $parts = preg_split('/\s*[-–—]\s*/', $clean);
+        $timePart = (count($parts) > 1) ? $parts[1] : $clean;
+
+        // Se la parte oraria sembra ancora contenere una data, proviamo a pulirla
+        // (es: "09/10/2025 17:30-19:30" -> "17:30-19:30")
+        $timePart = preg_replace('/^\d{1,2}[\/\-\.]\d{1,2}([\/\-\.]\d{2,4})?\s+/', '', $timePart);
+
+        // 3) Normalizza range orari (es: 17:30-19:30 diventa 17:30 - 19:30)
+        // ma prima assicuriamoci che i separatori interni siano ":"
+        $timePart = preg_replace('/(\d{1,2})[:\.](?=\d{2})/', '$1:', $timePart);
+        
+        if (preg_match('/(\d{1,2}:\d{2})\s*[-–—]\s*(\d{1,2}:\d{2})/', $timePart, $m)) {
+            return $m[1] . ' - ' . $m[2];
+        }
+
+        // Caso orario singolo
+        if (preg_match('/(\d{1,2}:\d{2})/', $timePart, $m)) {
+            return $m[1];
+        }
+
+        return '';
     }
 
     /** Campi filtrabili (alias) da usare nel template */
@@ -226,6 +451,50 @@ public function filterColors(): array
 
         self::$filtersIndexCache[$field] = $values;
         return $values;
+    }
+
+    public function availableMonths(): array
+    {
+        if (empty($this->rolesIndex)) {
+            $this->buildAliases();
+        }
+
+        $months = [];
+        $dateAlias = $this->rolesIndex['date'] ?? null;
+        $stickyYear = (int)date('Y');
+
+        foreach ($this->parseCsvRows() as $assoc) {
+            $rawDateOriginal = $dateAlias ? ($assoc[$dateAlias] ?? '') : (string)$this->fieldByRole($assoc, 'date');
+            if (preg_match('/\b(\d{4})\b/', $rawDateOriginal, $matches)) {
+                $stickyYear = (int)$matches[1];
+            }
+            $dates = $this->splitDates($rawDateOriginal);
+            foreach ($dates as $d) {
+                $ts = $this->parseToTimestamp($d, $stickyYear);
+                if ($ts > 0) {
+                    $key = date('Y-m', $ts);
+                    if (!isset($months[$key])) {
+                        $months[$key] = [
+                            'key'   => $key,
+                            'label' => $this->formatMonthLabel($ts)
+                        ];
+                    }
+                }
+            }
+        }
+        ksort($months);
+        return array_values($months);
+    }
+
+    protected function formatMonthLabel(int $ts): string
+    {
+        $m = (int)date('n', $ts);
+        $months = [
+            1 => 'gennaio', 2 => 'febbraio', 3 => 'marzo', 4 => 'aprile',
+            5 => 'maggio', 6 => 'giugno', 7 => 'luglio', 8 => 'agosto',
+            9 => 'settembre', 10 => 'ottobre', 11 => 'novembre', 12 => 'dicembre'
+        ];
+        return ($months[$m] ?? '') . ' ' . date('Y', $ts);
     }
 
     /* ===== Parser generator (senza fallback; whitelist opzionale) ===== */
@@ -315,7 +584,16 @@ public function totalRows(): int
 
     // Conta le righe del CSV applicando gli stessi criteri di filtro di children()
     $count = 0;
+    $dateAlias = $this->rolesIndex['date'] ?? null;
+    $todayStart = strtotime('today');
+    $stickyYear = (int)date('Y');
+
     foreach ($this->parseCsvRows() as $assoc) {
+        $rawDateOriginal = $dateAlias ? ($assoc[$dateAlias] ?? '') : (string)$this->fieldByRole($assoc, 'date');
+        if (preg_match('/\b(\d{4})\b/', $rawDateOriginal, $matches)) {
+            $stickyYear = (int)$matches[1];
+        }
+
         if ($hasActiveFilters) {
             $ok = true;
             foreach ($activeFilters as $alias => $requiredSlugs) {
@@ -330,7 +608,20 @@ public function totalRows(): int
             }
             if (!$ok) continue;
         }
-        $count++;
+
+        // Se abbiamo un campo data, contiamo ogni occorrenza splittata che non sia nel passato
+        if ($dateAlias && !empty($assoc[$dateAlias])) {
+            $dates = $this->splitDates($assoc[$dateAlias]);
+            foreach ($dates as $d) {
+                $ts = $this->parseToTimestamp($d, $stickyYear);
+                // Se non è una data valida (0) o è da oggi in poi, contiamo
+                if ($ts === 0 || $ts >= $todayStart) {
+                    $count++;
+                }
+            }
+        } else {
+            $count++;
+        }
     }
 
     self::$rowCountCache = $count;
@@ -340,6 +631,9 @@ public function totalRows(): int
     /* ===== Children: item O(1) + listing single-scan con multi-filtri (AND) ===== */
     public function children(): Pages
     {
+        $defaults = $this->sheetDefaults();
+        $fallback = $defaults['fallback'];
+
         // helper: primo non vuoto (NON usa fallback)
         $firstNonEmpty = function (...$vals) {
             foreach ($vals as $v) {
@@ -348,9 +642,8 @@ public function totalRows(): int
             return null;
         };
 
-        // helper: crea child applicando fallback ai campi DOPO lo slug
-        $makeChild = function(array $assoc, string $fallback) use ($firstNonEmpty) {
-            // slug SOLO da valori reali
+        // helper: crea riga base slug
+        $getBaseSlug = function(array $assoc) use ($firstNonEmpty) {
             $base = $firstNonEmpty(
                 $assoc['slug']  ?? null,
                 $assoc['titolo']?? $assoc['title'] ?? null,
@@ -358,9 +651,11 @@ public function totalRows(): int
                 $assoc['name']  ?? null
             );
             if ($base === null) $base = substr(md5(json_encode($assoc)), 0, 10);
-            $slug = Str::slug((string)$base);
+            return Str::slug((string)$base);
+        };
 
-            // fallback generico sui campi
+        // helper: crea child data-associata
+        $makeChild = function(array $assoc, string $slug, string $fallback) {
             $content = $assoc;
             foreach ($content as $k => $v) {
                 if (trim((string)$v) === '') $content[$k] = $fallback;
@@ -379,103 +674,75 @@ public function totalRows(): int
             ];
         };
 
-        $defaults = $this->sheetDefaults();
-        $fallback = $defaults['fallback'];
+        $childSlugRequested = $this->requestedChildSlug();
 
-        /* --- Lettura filtri multipli dal querystring ---
-           Schema: ?filter[alias1]=v1,v2&filter[alias2]=w1
-           - AND tra alias
-           - AND dentro ogni alias (tutti i valori richiesti devono essere presenti nella riga)
-        */
+        // Lettura filtri
         $filterParam = $_GET['filter'] ?? [];
-        $activeFilters = []; // alias => [slugged values]
+        $activeFilters = []; 
         if (is_array($filterParam)) {
             foreach ($filterParam as $alias => $valueCsv) {
                 $alias = Str::slug((string)$alias);
-                // considera solo alias marcati filtrabili
-                if (!in_array($alias, $this->filterableFields(), true)) {
-                    continue;
-                }
+                if (!in_array($alias, $this->filterableFields(), true)) continue;
                 $vals = array_values(array_unique(array_filter(array_map('trim', explode(',', (string)$valueCsv)))));
                 $vals = array_map(fn($v) => Str::slug($v), $vals);
-                if (!empty($vals)) {
-                    $activeFilters[$alias] = $vals;
-                }
+                if (!empty($vals)) $activeFilters[$alias] = $vals;
             }
         }
-        $hasActiveFilters = !empty($activeFilters);
 
-        // === Modalità ITEM: usa row-map dalla cache, fallback a scan ===
-        if ($childSlug = $this->requestedChildSlug()) {
-            $csvBody = $this->fetchCsvBody();
-            if (!$csvBody) return new Pages([]);
-            $hash   = md5($csvBody);
-            $mapKey = 'csvmap:' . $hash;
-            $map    = self::$rowMapCache ?? $this->kirby()->cache('sheet')->get($mapKey) ?? [];
+        $monthRequested = get('month');
+        $hasActiveFilters = (!empty($activeFilters) || $monthRequested) && !$childSlugRequested;
 
-            if (isset($map[$childSlug])) {
-                $content = $map[$childSlug];
-                foreach ($content as $k => $v) {
-                    if (trim((string)$v) === '') $content[$k] = $fallback;
-                }
-                if (!isset($content['titolo']) || trim((string)$content['titolo']) === '') {
-                    $content['titolo'] = $fallback;
-                }
-                $tpl = $content['template'] ?? 'spreadsheet-item';
-                return Pages::factory([[
-                    'slug'     => $childSlug,
-                    'num'      => 0,
-                    'template' => $tpl,
-                    'model'    => $tpl,
-                    'content'  => $content,
-                ]], $this);
-            }
-
-            // fallback: prima visita diretta → scan
-            foreach ($this->parseCsvRows() as $assoc) {
-                $child = $makeChild($assoc, $fallback);
-                if ($child['slug'] === $childSlug) {
-                    return Pages::factory([ $child ], $this);
-                }
-            }
-            return new Pages([]);
-        }
-
-        // === Listing: single-scan = children + total + row-map + indice filtri ===
-        $limit  = max(1, (int)(get('limit')  ?? $defaults['pageSize']));
-        $offset = max(0, (int)(get('offset') ?? 0));
-
-        $children = [];
-        $total    = 0;
-
-        // prepara row-map e filters-index key
         $csvBody = $this->fetchCsvBody();
-        $hash    = $csvBody ? md5($csvBody) : null;
-        $cache   = $this->kirby()->cache('sheet');
-        $mapKey  = $hash ? 'csvmap:' . $hash : null;
+        if (!$csvBody) return new Pages([]);
+        
+        $hash   = md5($csvBody);
+        $cache  = $this->kirby()->cache('sheet');
+        $mapKey = 'csvmap:' . $hash;
 
-        $map  = ($hash && self::$rowMapCache !== null) ? self::$rowMapCache : (($hash && $cache->get($mapKey)) ?: []);
-        $fidx = self::$filtersIndexCache ?? [];
+        // In ITEM mode, se abbiamo la cache cerchiamo il match esatto o parziale (base slug)
+        if ($childSlugRequested) {
+            $map = self::$rowMapCache ?? $cache->get($mapKey) ?? [];
+            if (isset($map[$childSlugRequested])) {
+                $child = $makeChild($map[$childSlugRequested], $childSlugRequested, $fallback);
+                return Pages::factory([$child], $this);
+            }
+            // Fallback: cerca se è un base slug
+            foreach ($map as $s => $cont) {
+                if (strpos($s, $childSlugRequested) === 0) {
+                     $child = $makeChild($cont, $childSlugRequested, $fallback);
+                     return Pages::factory([$child], $this);
+                }
+            }
+        }
+
+        // Listing o Item (fallback scan)
+        $allItems = [];
+        $map      = []; 
+        $fidx     = [];
+        $dateAlias = $this->rolesIndex['date'] ?? null;
+        $stickyYear = (int)date('Y');
+        $todayStart = strtotime('today');
+        $next30Days = $todayStart + (30 * 86400);
 
         foreach ($this->parseCsvRows() as $assoc) {
-            // indice filtri (tokenizzato) per tutti i campi filtrabili
-            foreach ($this->filterableFields() as $ff) {
-                foreach ($this->tokenize($assoc[$ff] ?? '') as $token) {
-                    $fidx[$ff][] = $token;
+            $rawDateOriginal = $dateAlias ? ($assoc[$dateAlias] ?? '') : (string)$this->fieldByRole($assoc, 'date');
+            if (preg_match('/\b(\d{4})\b/', $rawDateOriginal, $matches)) {
+                $stickyYear = (int)$matches[1];
+            }
+
+            if (!$childSlugRequested) {
+                foreach ($this->filterableFields() as $ff) {
+                    foreach ($this->tokenize($assoc[$ff] ?? '') as $token) {
+                        $fidx[$ff][] = $token;
+                    }
                 }
             }
 
-            // applica filtri attivi (AND tra campi, AND tra valori del singolo campo)
             if ($hasActiveFilters) {
                 $ok = true;
                 foreach ($activeFilters as $alias => $requiredSlugs) {
-                    $rowTokensSlugs = array_map(
-                        fn($t) => Str::slug($t),
-                        $this->tokenize($assoc[$alias] ?? '')
-                    );
-                    // tutti i required devono esistere nei token della riga
-                    $missing = array_diff($requiredSlugs, $rowTokensSlugs);
-                    if (!empty($missing)) {
+                    $rowTokensSlugs = array_map(fn($t) => Str::slug($t), $this->tokenize($assoc[$alias] ?? ''));
+                    if (!empty(array_diff($requiredSlugs, $rowTokensSlugs))) {
                         $ok = false;
                         break;
                     }
@@ -483,26 +750,70 @@ public function totalRows(): int
                 if (!$ok) continue;
             }
 
-            $total++; // conteggio risultati (post-filtri)
+            $baseSlug = $getBaseSlug($assoc);
+            $dates = $this->splitDates($rawDateOriginal);
+            if (empty($dates)) $dates = [$rawDateOriginal];
 
-            // crea child e slug
-            $child = $makeChild($assoc, $fallback);
-            $slug  = $child['slug'];
+            foreach ($dates as $index => $d) {
+                $ts = $this->parseToTimestamp($d, $stickyYear);
 
-            // aggiorna row-map
-            if ($hash && !isset($map[$slug])) {
+                // Filtro per Mese (se richiesto)
+                if ($monthRequested) {
+                    if (date('Y-m', $ts) !== $monthRequested) {
+                        continue;
+                    }
+                } else {
+                    // Temporalizzazione standard: prossimi 30 giorni
+                    // (applicata se non c'è un filtro mese, anche se ci sono altri filtri attivi)
+                    if ($ts < $todayStart || $ts > $next30Days) {
+                        continue;
+                    }
+                }
+
+                $slug = $baseSlug;
+                if (count($dates) > 1) {
+                    $dateSlugPart = $ts > 0 ? date('Ymd', $ts) : 'occurrence-' . ($index + 1);
+                    $slug .= '-' . $dateSlugPart;
+                }
+                
+                $child = $makeChild($assoc, $slug, $fallback);
+                if ($dateAlias) {
+                    $child['content'][$dateAlias . '_all'] = $rawDateOriginal;
+                    $child['content'][$dateAlias] = $d;
+                }
+                
+                // Salviamo nella mappa per redirect/item mode
                 $map[$slug] = $child['content'];
-            }
+                if ($slug !== $baseSlug && !isset($map[$baseSlug])) {
+                    $map[$baseSlug] = $child['content'];
+                }
 
-            // accumula solo il blocco richiesto
-            if ($total <= $offset) continue;
-            if (count($children) < $limit) {
-                $children[] = $child;
+                if ($childSlugRequested === $slug || $childSlugRequested === $baseSlug) {
+                    $finalChild = $makeChild($assoc, $childSlugRequested, $fallback);
+                    return Pages::factory([ $finalChild ], $this);
+                }
+
+                if (!$childSlugRequested) {
+                    $child['_date_ts'] = $ts;
+                    $child['content']['base_slug'] = $baseSlug;
+                    $allItems[] = $child;
+                }
             }
-            // continua per completare indice filtri e mappa
         }
 
-        // normalizza filtri (unici + ordinati) e salva per-request cache
+        if ($childSlugRequested) return new Pages([]);
+
+        usort($allItems, function($a, $b) {
+            $tsA = $a['_date_ts'] ?? 0;
+            $tsB = $b['_date_ts'] ?? 0;
+            $dayA = floor($tsA / 86400) * 86400;
+            $dayB = floor($tsB / 86400) * 86400;
+            if ($dayA != $dayB) return $dayA <=> $dayB;
+            return $tsA <=> $tsB; 
+        });
+
+        self::$rowCountCache = count($allItems);
+
         foreach ($fidx as $k => $arr) {
             $arr = array_values(array_unique($arr));
             sort($arr, SORT_NATURAL | SORT_FLAG_CASE);
@@ -510,14 +821,10 @@ public function totalRows(): int
         }
         self::$filtersIndexCache = $fidx;
 
-        // salva caches persistenti
-        self::$rowCountCache = $total;
-        if ($hash && $mapKey) {
-            $cache->set($mapKey, $map, $defaults['ttl']);
-            self::$rowMapCache = $map;
-        }
+        $cache->set($mapKey, $map, $defaults['ttl']);
+        self::$rowMapCache = $map;
 
-        return empty($children) ? new Pages([]) : Pages::factory($children, $this);
+        return empty($allItems) ? new Pages([]) : Pages::factory($allItems, $this);
     }
 
     /* ===== Pool COMPLETO per la ricerca (senza limiti/filtri) ===== */
@@ -539,7 +846,16 @@ public function totalRows(): int
             return null;
         };
 
-        $makeChild = function(array $assoc) use ($firstNonEmpty, $fallback) {
+        $allItems = [];
+        $dateAlias = $this->rolesIndex['date'] ?? null;
+        $stickyYear = (int)date('Y');
+
+        foreach ($this->parseCsvRows() as $assoc) {
+            $rawDateOriginal = $dateAlias ? ($assoc[$dateAlias] ?? '') : (string)$this->fieldByRole($assoc, 'date');
+            if (preg_match('/\b(\d{4})\b/', $rawDateOriginal, $matches)) {
+                $stickyYear = (int)$matches[1];
+            }
+
             $base = $firstNonEmpty(
                 $assoc['slug']  ?? null,
                 $assoc['titolo']?? $assoc['title'] ?? null,
@@ -547,33 +863,37 @@ public function totalRows(): int
                 $assoc['name']  ?? null
             );
             if ($base === null) $base = substr(md5(json_encode($assoc)), 0, 10);
-            $slug = Str::slug((string)$base);
+            $baseSlug = Str::slug((string)$base);
 
-            // fallback sui campi: evita vuoti che penalizzano la search
-            $content = $assoc;
-            foreach ($content as $k => $v) {
-                if (trim((string)$v) === '') $content[$k] = $fallback;
+            $dates = $this->splitDates($rawDateOriginal);
+            if (empty($dates)) $dates = [$rawDateOriginal];
+
+            foreach ($dates as $index => $d) {
+                $slug = $baseSlug;
+                if (count($dates) > 1) {
+                    $dateTs = $this->parseToTimestamp($d, $stickyYear);
+                    $dateSlugPart = $dateTs > 0 ? date('Ymd', $dateTs) : 'occurrence-' . ($index + 1);
+                    $slug .= '-' . $dateSlugPart;
+                }
+
+                $content = $assoc;
+                foreach ($content as $k => $v) {
+                    if (trim((string)$v) === '') $content[$k] = $fallback;
+                }
+                if ($dateAlias) $content[$dateAlias] = $d;
+
+                $tpl = $content['template'] ?? 'spreadsheet-item';
+                $allItems[] = [
+                    'slug'     => $slug,
+                    'num'      => 0,
+                    'template' => $tpl,
+                    'model'    => $tpl,
+                    'content'  => $content,
+                ];
             }
-            if (!isset($content['titolo']) || trim((string)$content['titolo']) === '') {
-                $content['titolo'] = $fallback;
-            }
-
-            $tpl = $content['template'] ?? 'spreadsheet-item';
-            return [
-                'slug'     => $slug,
-                'num'      => 0,
-                'template' => $tpl,
-                'model'    => $tpl,
-                'content'  => $content,
-            ];
-        };
-
-        $children = [];
-        foreach ($this->parseCsvRows() as $assoc) {
-            $children[] = $makeChild($assoc);
         }
 
-        self::$searchPoolCache = Pages::factory($children, $this);
+        self::$searchPoolCache = empty($allItems) ? new Pages([]) : Pages::factory($allItems, $this);
         return self::$searchPoolCache;
     }
 }

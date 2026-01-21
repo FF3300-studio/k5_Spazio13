@@ -1,6 +1,14 @@
 @use "sass:math";
 @use "../settings" as *;
 
+* {
+  font-family: "regular";
+
+  & strong {
+    font-family: "black";
+  }
+}
+
 %micro {
   font-size: $micro;
   line-height: $micro-lineh;
@@ -10,7 +18,7 @@
     line-height: $micro-lineh-xl;
   }
 
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     font-size: $micro-sm;
     line-height: $micro-lineh-sm;
   }
@@ -25,7 +33,7 @@
     line-height: $extrasmall-lineh-xl;
   }
 
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     font-size: $extrasmall-sm;
     line-height: $extrasmall-lineh-sm;
   }
@@ -41,7 +49,7 @@
     line-height: $small-lineh-xl;
   }
 
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     font-size: $small-sm;
     line-height: $small-lineh-sm;
   }
@@ -56,7 +64,7 @@
     line-height: $medium-lineh-xl;
   }
 
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     font-size: $medium-sm;
     line-height: $medium-lineh-sm;
   }
@@ -71,7 +79,7 @@
     line-height: $large-lineh-xl;
   }
 
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     font-size: $large-sm;
     line-height: $large-lineh-sm;
   }
@@ -86,7 +94,7 @@
     line-height: $extralarge-lineh-xl;
   }
 
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     font-size: $extralarge-sm;
     line-height: $extralarge-lineh-sm;
   }
@@ -101,7 +109,7 @@
     line-height: $ultralarge-lineh-xl;
   }
 
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     font-size: $ultralarge-sm;
     line-height: $ultralarge-lineh-sm;
   }
@@ -116,7 +124,7 @@
     line-height: $massive-lineh-xl;
   }
 
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     font-size: $massive-sm;
     line-height: $massive-lineh-sm;
   }
@@ -133,27 +141,13 @@ body {
   @extend %medium;
 }
 
-* strong {
-  font-variation-settings: "wght"$font-black;
-}
 
 h1 {
   @extend %massive;
-  font-variation-settings: "wght"$font-bold;
-
-  & strong {
-    font-variation-settings: "wght"$font-black;
-  }
 }
 
 h2 {
   @extend %extralarge;
-  font-variation-settings: "wght"$font-bold;
-
-  & strong {
-    font-variation-settings: "wght"$font-black;
-  }
-
 }
 
 h3 {
@@ -162,7 +156,6 @@ h3 {
 
 h4 {
   @extend %medium;
-  font-variation-settings: "wght"$font-black;
 }
 
 h5 {
@@ -175,8 +168,10 @@ h3,
 h4,
 h5 {
   margin: 0;
-  color: $color-theme;
+  color: $color-black;
   margin-bottom: $spacer;
+  font-family: "medium";
+  line-height: 1.2em;
 
   @include media-breakpoint-up(xl) {
     margin-bottom: $spacer-xl;
@@ -184,6 +179,10 @@ h5 {
 
   @include media-breakpoint-down(sm) {
     margin-bottom: $spacer-sm;
+  }
+
+  strong {
+    font-family: "black";
   }
 
   span {
