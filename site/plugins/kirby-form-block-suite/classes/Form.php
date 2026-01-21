@@ -777,7 +777,6 @@ static function translate($key, $default, $replace = [], $fallback = null) {
             if(!is_null($request)) {
 
                 $this->attachments = $this->request->uploadFiles($this->attachmentFields());
-<<<<<<< HEAD
                 // DEBUG TRACE
                 $this->log("Starting notification process. isFatal: " . ($this->isFatal() ? 'true' : 'false'));
 
@@ -787,11 +786,6 @@ static function translate($key, $default, $replace = [], $fallback = null) {
                     $this->sendNotification();
                 } else {
                     $this->log("Skipping sendNotification - Conditions: DisableNotify=" . (option('plain.formblock.disable_notify') ? 'T' : 'F') . " Fatal=" . ($this->isFatal() ? 'T' : 'F') . " EnableField=" . ($this->enable_notify()->isTrue() ? 'T' : 'F'));
-=======
-                // Send notification mail
-                if (!option('plain.formblock.disable_notify') && !$this->isFatal() && $this->enable_notify()->isTrue()) {
-                    $this->sendNotification();
->>>>>>> 30a41e65c710913fdd28c19b9aef2cba21432ae0
                 }
                 
                 // Send confirmation mail
@@ -827,7 +821,6 @@ static function translate($key, $default, $replace = [], $fallback = null) {
             'next'    => $this->next()
         ];
     }
-<<<<<<< HEAD
 
     /**
      * Log debug message to file
@@ -845,6 +838,4 @@ static function translate($key, $default, $replace = [], $fallback = null) {
         file_put_contents($logFile, $logMsg, FILE_APPEND);
     }
 
-=======
->>>>>>> 30a41e65c710913fdd28c19b9aef2cba21432ae0
 }

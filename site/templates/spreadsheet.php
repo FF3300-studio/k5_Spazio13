@@ -196,7 +196,15 @@ function build_url($base, $merge = []) {
             <div class="block-grid-a-list" style="justify-content: center; display: flex; flex-direction: column; gap: 15px; padding: 15px;">
               <?php foreach ($group as $child): ?>
                 <div class="single-cards" style="width: 100%; min-width: 100%!important;">
-                  <?php snippet('spreadsheet-item', ['child' => $child, 'csvSource' => $page]) ?>
+                  <?php snippet('spreadsheet-item', [
+                    'child'     => $child,
+                    'csvSource' => $page,
+                    'showTags'  => false,
+                    'showExtra' => false,
+                    'showNodo'  => false,
+                    'class'     => 'no_hover',
+                    'padding'   => '0 15px'
+                ]) ?>
                 </div>
               <?php endforeach ?>
             </div>
