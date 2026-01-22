@@ -11,7 +11,7 @@
             $parent = $block->collection()->toPage(); 
             $collection = $parent->children(); 
             $categories = $parent->parent_category_manager()->toStructure(); // Categorie definite nel parent
-            $categoryMarkerMap = \Site\Helpers\Collection\buildCategoryMarkerMap($categories);
+            $categoryMarkerMap = \NonDeterministic\Helpers\CollectionHelper::buildCategoryMarkerMap($categories);
             $defaultMarkerUrl = $parent->default_marker()->toFiles()->first()?->url() ?? $site->marker()->toFiles()->first()?->url();
             ?>
 
@@ -21,7 +21,7 @@
                 $location = $item->locator()->toLocation();
                 $child_categories = $item->child_category_selector()->split(','); // Categorie associate al child
 
-                $item_marker = \Site\Helpers\Collection\resolveCategoryMarker(
+                $item_marker = \NonDeterministic\Helpers\CollectionHelper::resolveCategoryMarker(
                     $child_categories,
                     $categoryMarkerMap,
                     $defaultMarkerUrl

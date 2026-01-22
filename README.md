@@ -14,7 +14,7 @@ Questo è un meta-strumento, possiamo immaginarlo come un **sistema di gestione 
 Il progetto fonde la struttura classica di Kirby con una toolchain moderna basata su Vite.
 
 ```text
-.
+├── docs/               # Documentazione di progetto (spostata da site/docs)
 ├── assets/             # Asset sorgenti (SASS/JS) e compilati (build/)
 ├── content/            # Contenuti gestiti dal Panel (esclusi da Git)
 ├── kirby/              # Core di Kirby CMS
@@ -26,7 +26,8 @@ Il progetto fonde la struttura classica di Kirby con una toolchain moderna basat
 │   ├── models/         # Estensioni delle pagine (logiche avanzate)
 │   ├── plugins/        # Estensioni core e di terze parti
 │   ├── snippets/       # Componenti HTML/PHP riutilizzabili
-│   └── templates/      # Pagine finali (HTML/JSON/CSV)
+│   └── templates/      # Pagine finali (HTML/JSON/CSV dinamici)
+├── _brain_logs/        # Archivo storico dei task e delle decisioni (Brain)
 ├── vendor/             # Dipendenze PHP (Composer)
 └── vite.config.js      # Configurazione della build frontend
 ```
@@ -161,4 +162,7 @@ Le blueprint sono organizzate per ridurre il carico cognitivo:
     1.  Crea lo snippet `collection-timeline.php`.
     2.  Aggiungi l'opzione `timeline` nel blueprint `site/blueprints/tabs/collection_options.yml` (o dove definito).
     3.  **Fondamentale**: Aggiungi la condizione `elseif($page->collection_options() == 'timeline')` in `site/snippets/check_collection.php` per richiamare il nuovo snippet.
--   **Logica API**: Se hai bisogno di esportare dati per app esterne, usa i template `.json.php` o `.csv.php` già presenti, che serializzano i modelli liquidi in formati standard.
+-   **Logica API**: Se hai bisogno di esportare dati per app esterne, usa i template `.json.php` o `.csv.php`. Questi template sono stati resi **dinamici**: mappano automaticamente tutti i campi definiti nel blueprint o presenti nel contenuto, escludendo quelli vuoti e formattando i tipi complessi (pagine, file, strutture) in modo appropriato.
+
+---
+*Ultimo aggiornamento significativo: 2026-01-22 (Refactoring template dinamici e consolidamento regole)*

@@ -9,75 +9,134 @@ function formatDataItaliano($data) {
 }
 
 function serializePage($page, $site) {
-
-    // Calcola il numero massimo di iscrizioni
-    $max = $page->num_max()->isNotEmpty() ? (int)$page->num_max()->value() : null;
-
-    // Conta le risposte al form
-    $responses = $page->index(true)->filter(function ($p) use ($page) {
-        return $p->intendedTemplate()->name() === 'formrequest'
-            && ($p->isDescendantOf($page) || Str::startsWith($p->id(), $page->id()));
-    });
-
-    // Conta solo risposte già lette
-    $responsesRead = $responses->filter(function ($p) {
-        return $p->content()->get('read')->isFalse();
-    });
-    $count = $responsesRead->count();
-
-    return [
-        'url' => $page->url(),
-        'title' => $page->title()->value() ?? null,
-        'num_max' => $max,
-        'risposte_form' => $count,
-        'descrizione' => $page->descrizione()->isNotEmpty() ? $page->descrizione()->value() : null,
-        'dove' => $page->dove()->isNotEmpty()
-            ? $page->dove()->toPages()->map(fn($p) => $p->title())->values()
-            : null,
-        'immagine' => $page->immagine()->isNotEmpty() ? $page->immagine()->toFile()->url() : null,
-        'thumb' => $page->thumbnail()->isNotEmpty() ? $page->thumbnail()->toFile()->url() : null,
-        'child_category_selector' => $page->child_category_selector()->isNotEmpty() ? $page->child_category_selector()->value() : null,
-        'appuntamenti' => $page->appuntamenti()->isNotEmpty()
-            ? array_map(function ($appuntamento) {
-                return [
-                    'giorno' => formatDataItaliano($appuntamento['giorno']),
-                    'orario_inizio' => substr($appuntamento['orario_inizio'], 0, 5),
-                    'orario_fine' => substr($appuntamento['orario_fine'], 0, 5),
-                ];
-            }, $page->appuntamenti()->yaml())
-            : null,
-        'deadline' => $page->deadline()->isNotEmpty()
-            ? formatDataItaliano($page->deadline()->value())
-            : null,
-        'correlati' => $page->correlati()->isNotEmpty()
-            ? $page->correlati()->toPages()->map(fn($p) => $p->title())->values()
-            : null,
-        'team' => $page->team()->isNotEmpty()
-            ? $page->team()->toStructure()->map(function($entry) {
-                return [
-                    'persona' => $entry->persona()->value(),
-                    'ruolo' => $entry->ruolo()->value(),
-                ];
-            })->values()
-            : null,
-        'locator' => $page->locator()->isNotEmpty() ? $page->locator()->yaml() : null,
-        'zoom_mappa' => $page->zoom_mappa()->isNotEmpty() ? $page->zoom_mappa()->value() : null,
-        'centro_mappa' => $page->centro_mappa()->isNotEmpty() ? $page->centro_mappa()->value() : null,
-
+    $data = [
+        'id'    => $page->id(),
+        'uuid'  => $page->uuid()->value(),
+        'url'   => $page->url(),
+        'title' => $page->title()->value(),
+        'slug'  => $page->slug(),
     ];
+
+    // Excluded fields
+    $excluded = [
+        'parent_collection_options',
+        'parent_categories_toggle',
+        'collection_toggle',
+        'collection_categories_manager_toggle',
+        'collection_pagination',
+        'map_style',
+        'map_key',
+        'collection_pagination_prev',
+        'collection_pagination_number',
+        'collection_pagination_next'
+    ];
+
+    // Get all fields from the page content
+    $content = $page->content()->toArray();
+    $blueprint = $page->blueprint();
+
+    foreach ($content as $key => $value) {
+        // Skip base fields and excluded fields
+        if (in_array($key, ['title', 'uuid']) || in_array($key, $excluded)) continue;
+
+        $field = $page->content()->get($key);
+        if ($field->isEmpty()) continue;
+
+        $fieldBlueprint = $blueprint->field($key);
+        $type = $fieldBlueprint['type'] ?? 'text';
+
+        switch ($type) {
+            case 'pages':
+                $pagesData = [];
+                foreach ($field->toPages() as $p) {
+                    $pagesData[] = [
+                        'id'    => $p->id(), 
+                        'title' => $p->title()->value(), 
+                        'url'   => $p->url()
+                    ];
+                }
+                $data[$key] = $pagesData;
+                break;
+                
+            case 'files':
+                $filesData = [];
+                foreach ($field->toFiles() as $f) {
+                    $filesData[] = [
+                        'id'       => $f->id(), 
+                        'filename' => $f->filename(), 
+                        'url'      => $f->url()
+                    ];
+                }
+                $data[$key] = $filesData;
+                break;
+                
+            case 'structure':
+                $structureData = [];
+                foreach ($field->toStructure() as $entry) {
+                    $entryData = [];
+                    foreach ($entry->content()->toArray() as $k => $v) {
+                        if ($entry->content()->get($k)->isNotEmpty()) {
+                            $entryData[$k] = $entry->content()->get($k)->value();
+                        }
+                    }
+                    $structureData[] = $entryData;
+                }
+                $data[$key] = $structureData;
+                break;
+                
+            case 'date':
+                $data[$key] = $field->toDate('Y-m-d H:i:s');
+                break;
+            case 'toggle':
+                $data[$key] = $field->toBool();
+                break;
+            case 'tags':
+            case 'multiselect':
+                $data[$key] = $field->split();
+                break;
+            case 'link':
+            case 'url':
+                $data[$key] = $field->value();
+                break;
+            case 'layout':
+                // Layout could be serialized if needed, but keeping it simple for now
+                break;
+            default:
+                $data[$key] = $field->value();
+                break;
+        }
+    }
+
+    // Special case: risposte_form (maintained for utility)
+    if (class_exists('NonDeterministic\Helpers\CollectionHelper')) {
+        $formData = \NonDeterministic\Helpers\CollectionHelper::getFormData($page, $site);
+        if ($formData['count'] > 0 || (isset($formData['max']) && $formData['max'] !== null)) {
+            $data['form_stats'] = [
+                'responses' => $formData['count'],
+                'max'       => $formData['max'] ?? null
+            ];
+        }
+    }
+
+    return $data;
 }
 
 $children = $page->children()->listed();
-$data = [];
+$output   = [];
 
 if ($children->isNotEmpty()) {
+    $childrenData = [];
     foreach ($children as $child) {
-        $data[] = serializePage($child, $site);
+        $childrenData[] = serializePage($child, $site);
     }
+    
+    $output = [
+        'page'     => serializePage($page, $site),
+        'children' => $childrenData
+    ];
 } else {
-    $data[] = serializePage($page, $site);
+    $output = serializePage($page, $site);
 }
 
 header('Content-Type: application/json');
-header('Content-Disposition: attachment; filename="pagina-' . $page->slug() . '.json"');
-echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+echo json_encode($output, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);

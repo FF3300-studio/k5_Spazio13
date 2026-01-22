@@ -1,7 +1,7 @@
 <?php
 /** @var Kirby\Cms\Page $child */
 use Kirby\Toolkit\Str;
-use function Site\Helpers\Collection\formatDateItalian;
+use NonDeterministic\Helpers\CollectionHelper;
 
 $titolo = $child->title()->value();
 $desc   = $child->descrizione()->value();
@@ -9,7 +9,7 @@ $desc   = $child->descrizione()->value();
 $deadlineFormatted = null;
 $deadline = $child->deadline()->toDate();
 if ($deadline) {
-    $deadlineFormatted = formatDateItalian($deadline);
+    $deadlineFormatted = CollectionHelper::formatDateItalian($deadline);
 }
 
 $tag1 = null;

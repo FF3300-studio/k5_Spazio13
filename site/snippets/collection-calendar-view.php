@@ -1,14 +1,14 @@
 <?php
 /** @var Kirby\Cms\Collection $collection */
 use Kirby\Toolkit\Str;
-use function Site\Helpers\Collection\getOccurrences;
+use NonDeterministic\Helpers\CollectionHelper;
 
 $todayStart = strtotime('today');
 $next30Days = $todayStart + (30 * 86400);
 $monthRequested = get('month');
 
 // 1. Get all occurrences from the collection
-$allOccurrences = getOccurrences($collection);
+$allOccurrences = CollectionHelper::getOccurrences($collection);
 
 // 2. Extract available months for filters
 $availableMonths = [];

@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\Pages;
-use function Site\Helpers\Collection\formDataFor;
+use NonDeterministic\Helpers\CollectionHelper;
 
 return function ($site, $pages, $page) {
 
@@ -60,5 +60,5 @@ return function ($site, $pages, $page) {
   return [
     'query'    => $query,
     'results'  => $results,
-  ] + formDataFor();
+  ] + CollectionHelper::formDataFor($page);
 };

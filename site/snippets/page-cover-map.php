@@ -23,7 +23,7 @@ if ($collection_parent && $collection_parent->hasChildren()):
 
 
 <?php 
-    $categoryMarkerMap = isset($categories) ? \Site\Helpers\Collection\buildCategoryMarkerMap($categories) : [];
+    $categoryMarkerMap = isset($categories) ? \NonDeterministic\Helpers\CollectionHelper::buildCategoryMarkerMap($categories) : [];
     $defaultMarkerUrl = $parent->default_marker()->toFile()?->url();
 
     $locations_array = [];
@@ -31,7 +31,7 @@ if ($collection_parent && $collection_parent->hasChildren()):
         $location = $item->locator()->toLocation();
         $child_categories = $item->child_category_selector()->split(','); // Categorie associate al child
 
-        $item_marker = \Site\Helpers\Collection\resolveCategoryMarker(
+        $item_marker = \NonDeterministic\Helpers\CollectionHelper::resolveCategoryMarker(
             $child_categories,
             $categoryMarkerMap,
             $defaultMarkerUrl
