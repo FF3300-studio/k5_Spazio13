@@ -37,19 +37,21 @@ Il progetto fonde la struttura classica di Kirby con una toolchain moderna basat
 Alcuni file definiscono il comportamento critico del sistema:
 
 - `site/config/config.php`: Carica i moduli di configurazione (`hooks`, `options`, `routes`).
-- `site/models/spreadsheet.php`: Il cuore dell'importazione CSV dinamica.
-- `site/controllers/default.php`: Gestisce la logica di filtraggio e categorizzazione per quasi tutti i template.
+- `site/models/calendar-from-csv.php`: Il cuore dell'importazione CSV dinamica (ex `spreadsheet.php`).
+- `site/controllers/default.php`: Gestisce la logica di filtraggio e categorizzazione per quasi tutti i template (integrata col plugin).
 - `assets/src/sass/theme/settings/_tokens.scss`: Contiene i "geni" del design (colori, font, spacing).
 - `site/snippets/layouts.php`: Gestisce il rendering ricorsivo dei blocchi e dei layout.
-- `site/plugins/collection-helpers/`: Raccolta di funzioni core per la gestione delle collezioni.
+- `site/plugins/non-deterministic-cms/`: Raccolta di funzioni core per la gestione delle collezioni e logica condivisa.
 
 ---
 
-## 3bis. Analisi dei Plugin
+## 4. Analisi dei Plugin
 Il sistema integra plugin custom e di terze parti che ne estendono le capacità core:
 
+- **`non-deterministic-cms`**: Il "motore" del sito (Core Plugin). Centralizza la logica condivisa, helper e estensioni del core.
+    - **Helper (`NonDeterministic\Helpers\CollectionHelper`):** Gestione collezioni, mappe, marker, scadenze e dati form.
+    - **Trait (`NonDeterministic\Models\PageLogicTrait`):** Fornisce metodi SEO e Layout pronti all'uso per i modelli di pagina.
 - **`block-factory`**: Il motore dei contenuti modulari. Registra blueprint e snippet per blocchi complessi come mappe, slider, CTA, fisarmoniche e il calendario basato su CSV.
-- **`collection-helpers`**: (Plugin interno) Centralizza tutte le logiche di filtraggio, gestione dei marker geografici, normalizzazione delle categorie e calcolo dei dati dei form.
 - **`locator`**: Fornisce il campo geografico avanzato che permette di selezionare coordinate e indirizzi direttamente su una mappa nel Panel.
 - **`kirby-form-block-suite`**: Una suite completa per la creazione di form complessi direttamente all'interno dei blocchi di layout.
 - **`k3-whenquery`**: Estende le capacità native di Kirby permettendo di mostrare o nascondere campi e blocchi nel Panel in base a query dinamiche (logica condizionale avanzata).
@@ -60,18 +62,20 @@ Il sistema integra plugin custom e di terze parti che ne estendono le capacità 
 - **`kirby-code-editor`**: Abilita un editor di codice con sintassi evidenziata nel Panel per inserimenti tecnici.
 - **`utility-kirby`**: Set di micro-utility per la manipolazione di stringhe e file.
 
-## 4. Analisi logiche
+---
+
+## 5. Analisi logiche
 
 ### A. Ereditarietà Parametrica (Hooks)
 Il sistema usa gli **Hooks** (`site/config/hooks.php`) per garantire che i figli "sappiano" cosa fa il genitore. Quando una pagina viene creata o aggiornata, i parametri di visualizzazione (es. "mostra mappa", "abilita categorie") vengono propagati automaticamente. Questo permette di avere blueprint condizionali (`when`) che funzionano in modo coerente anche su gerarchie profonde.
 
-### B. Importazione Dati "Liquida" (`SpreadsheetPage` & `SediPage`)
+### B. Importazione Dati "Liquida" (`CalendarFromCsvPage` & `SediPage`)
 I modelli in `site/models/` trasformano dati grezzi in oggetti Kirby:
-- **`SpreadsheetPage`**: Implementa un parser robusto capace di gestire date in italiano, range orari e mapping di alias. Utilizza un sistema di cache con *Conditional GET* per non rallentare il sito durante il fetch di CSV remoti.
+- **`CalendarFromCsvPage`** (ex `SpreadsheetPage`): Implementa un parser robusto capace di gestire date in italiano, range orari e mapping di alias. Utilizza un sistema di cache con *Conditional GET* per non rallentare il sito durante il fetch di CSV remoti.
 - **`SediPage`**: Esegue lo split di file CSV o Google Sheets per generare **pagine virtuali** (children virtuali). Queste pagine non esistono fisicamente su disco ma sono navigabili come pagine standard, ottimizzando lo storage.
 
 ### C. Sistema di Prenotazione e Contatori (Bollini Dinamici)
-Una funzione avanzata è situata in `site/helpers/collection.php` (`formDataFor`):
+Una funzione avanzata è situata nel plugin `non-deterministic-cms` (`CollectionHelper::formDataFor`):
 - Calcola in tempo reale la disponibilità di posti per un evento analizzando il numero di sottopagine `formrequest` (iscrizioni) create.
 - Fornisce percentuali di riempimento e flag di "esaurito" utilizzati dagli snippet `form-request-counter.php` e `card-info-alt.php` per generare **bollini dinamici** e messaggi di stato.
 
@@ -79,7 +83,7 @@ Una funzione avanzata è situata in `site/helpers/collection.php` (`formDataFor`
 Lo snippet `collection-calendar-view.php` implementa una logica di temporalizzazione automatica:
 - **Default**: Mostra solo gli eventi con data maggiore o uguale a oggi (`strtotime('today')`).
 - **Filtro Mese**: Se l'utente seleziona un mese specifico tramite i "chip" filtri, la temporalizzazione di default viene bypassata per mostrare tutti gli eventi di quel periodo.
-- Gli appuntamenti vengono estratti tramite l'helper `getOccurrences`, che normalizza dati provenienti sia da pagine Kirby che da righe Spreadsheet.
+- Gli appuntamenti vengono estratti tramite l'helper `CollectionHelper::getOccurrences`, che normalizza dati provenienti sia da pagine Kirby che da righe CSV.
 
 ### E. Scadenza Dinamica del Layout
 Nello snippet `layouts.php`, ogni riga di layout può essere parametrizzata con il flag `scadenza`. Quando attivo, l'oggetto del layout (es. un form di iscrizione o un banner promozionale) **scompare automaticamente** se:
@@ -88,27 +92,59 @@ Nello snippet `layouts.php`, ogni riga di layout può essere parametrizzata con 
 
 ---
 
-## 5. Analisi componenti
+## 6. Analisi Componenti e Frontend
+
+### Modelli di Pagina (`site/models`)
+Tutte le pagine estendono `DefaultPage` (o ne usano il trait via plugin) che fornisce:
+- `$page->seoTitle()`: Titolo ottimizzato.
+- `$page->seoDescription()`: Meta description pulita.
+- `$page->layouts()`: Gestione dei layout Kirby.
+- `$page->formData()`: Integrazione con i contatori dei form.
+
+> [!NOTE]
+> I controller ora utilizzano il `CollectionHelper` per filtrare eventi e generare mappe, eliminando la necessità di helper locali sparsi.
 
 ### Snippet di Layout e Orchestrazione
 - **`layouts.php`**: Gestisce il rendering ricorsivo dei blocchi, calcolando sticky behavior, ancore e scadenze.
+    - **Supporto Anchor:** Genera automaticamente la navigazione se gli anchor sono attivi.
+    - **Sticky Columns:** Supporta colonne sticky con offset configurabile.
+    - **Scadenza:** Nasconde automaticamente i blocchi.
 - **`check_collection.php`**: È il "direttore d'orchestra" delle viste. Per ogni pagina collection, controlla il campo `collection_options` e decide quale vista caricare (`grid`, `map`, `calendar`, `blog`). Per implementare una nuova vista, è fondamentale aggiornare questo file oltre allo snippet specifico.
+
+### Header (`site/snippets/header.php`)
+Gestisce i meta tag e il caricamento degli asset (Vite).
+- **SEO Dinamico:** Utilizza i metodi del modello per generare meta tag consistenti.
 
 ### Blocchi Slide Modulari
 I file `site/snippets/block-slide-*` implementano uno slider (Swiper.js) che accetta tipi di contenuto misti (immagini, testi, video) mantenendo la stessa struttura logica di navigazione.
 
 ---
 
-## 6. Istruzioni per l'uso
+## 7. SCSS & Design System
+I file sono organizzati in `assets/src/sass/theme`:
+- `settings/`: Variabili, colori e tipografia.
+- `components/`: Stili atomici per i vari snippet (BEM).
+- `base/`: Reset e stili globali.
+
+---
+
+## 8. Pannello (UX)
+Le blueprint sono organizzate per ridurre il carico cognitivo:
+- **Tab Standard:** `Contenuto`, `SEO`, `Configurazione`.
+- **Feedback Visivo:** Utilizzo di icone, help text e toggle per guidare l'utente.
+
+---
+
+## 9. Istruzioni per l'uso
 
 1.  **Attivazione Collezione**: Nel Panel, ogni pagina ha un tab "Options". Attivando "Collection Utility", la pagina diventa un contenitore capace di filtrare i propri figli.
-2.  **Mapping CSV**: Per le pagine `spreadsheet`, usa il campo "Alias Map" per dire al sistema quale colonna del tuo CSV corrisponde al "Titolo", alla "Data" o ai "Filtri".
+2.  **Mapping CSV**: Per le pagine `calendar-from-csv` (ex `spreadsheet`), usa il campo "Alias Map" per dire al sistema quale colonna del tuo CSV corrisponde al "Titolo", alla "Data" o ai "Filtri".
 3.  **Gestione Categorie**: Le categorie definite nel genitore popolano automaticamente i menu a tendina dei figli tramite query dinamiche.
 4.  **Gestione Scadenze**: Per far sparire un blocco automaticamente, attiva "Scadenza" nel layout e imposta una "Deadline" nel tab Content della pagina.
 
 ---
 
-## 7. Istruzioni per l'installazione
+## 10. Istruzioni per l'installazione
 
 1.  **Requisiti**: PHP 8.2+, Node 18+, Composer.
 2.  **Setup Backend**: `composer install`.
@@ -118,7 +154,7 @@ I file `site/snippets/block-slide-*` implementano uno slider (Swiper.js) che acc
 
 ---
 
-## 8. Consigli per la personalizzazione
+## 11. Consigli per la personalizzazione
 
 -   **Colori e Font**: Modifica solo `assets/src/sass/theme/settings/_tokens.scss`. Il sistema rigenererà tutte le utility Bootstrap-like.
 -   **Nuove Viste**:
